@@ -1,0 +1,15 @@
+{
+  "name": "ep-tool",
+  "version": "1.0.0",
+  "description": "An Atlassian Connect addon that allows any user to manipulate entity and add-on properties in JIRA.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "atlassian",
+    "connect"
+  ],
+  "author": "Robert Massaioli",
+  "license": "MIT"
+}
