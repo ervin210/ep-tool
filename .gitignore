@@ -1,3 +1,9 @@
 # Temp Files
 .*.sw[a-p]
 *~
+
+# AMPS
+/amps-standalone
+
+# Node / NPM
+/node_modules
