@@ -42,10 +42,8 @@ module.exports = function(grunt) {
       },
       less: {
          compile: {
-            options: {
-               files: {
-                  "static-css/all.css": "static/less/all.less"
-               }
+            files: {
+               "static-css/all.css": "static/less/all.less"
             }
          }
       },
@@ -90,6 +88,5 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-contrib-less');
 
    // Default task(s).
-   grunt.registerTask('default', ['express:dev', 'watch']);
-
+   grunt.registerTask('default', ['requirejs', 'less', 'express:dev', 'watch']);
 };
