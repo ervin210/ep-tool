@@ -16,7 +16,7 @@
 
       {{=<% %>=}}
       <script id="property-panel" type="x-tmpl-mustache">
-         <div class="panel panel-default property">
+         <div class="panel panel-default property" data-property-key="{{key}}">
             <div class="panel-heading">
                <button class="aui-button delete-button"><span class="aui-icon aui-icon-small aui-iconfont-delete"></span></button>
                <h3 class="panel-title">{{key}}</h3>
@@ -24,6 +24,7 @@
             <div class="panel-body">
                <div class="editor"></div>
             </div>
+            <div class="status hidden"></div>
          </div>
       </script>
       <%={{ }}=%>

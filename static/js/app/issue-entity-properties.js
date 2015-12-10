@@ -35,6 +35,24 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          });
       });
    };
+
+   var setIssueEntityProperty = function(issueKey, propertyKey, propertyValue) {
+      return $.Deferred(function(self) {
+         AP.require(['request'], function(request) {
+            request({
+               url: '/rest/api/2/issue/' + issueKey + '/properties/' + propertyKey,
+               type: 'PUT',
+               contentType: 'application/json',
+               data: JSON.stringify(propertyValue),
+               success: function(data) {
+                  self.resolve();
+               }, error: function() {
+                  self.reject();
+               }
+            });
+         });
+      });
+   };
    
    var getAddonProperties = function(pKey) {
       return $.Deferred(function(deferred) {
@@ -85,6 +103,48 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
      return '_' + Math.random().toString(36).substr(2, 9);
    };
 
+   var isValidJson = function(rawData) {
+      try {
+         JSON.parse(rawData);
+         return true;
+      } catch (error) {
+         return false;
+      }
+   };
+
+   var statuses = {
+      blank: -1,
+      saved: 0,
+      saving: 1,
+      invalid: 2
+   };
+
+   var updateStatus = function(e, status) {
+      switch(status) {
+         case statuses.blank:
+            e.text("");
+            break;
+
+         case statuses.saving:
+            e.text("Saving...");
+            break;
+
+         case statuses.invalid:
+            e.text("Property value is not valid json. Please fix for autosave to continue.");
+            break;
+
+         case statuses.saved:
+            e.text("Saved!");
+            break;
+      }
+
+      e.toggleClass("hidden", status === statuses.blank);
+      e.toggleClass("pending", status === statuses.saving);
+      e.toggleClass("error", status === statuses.invalid);
+      e.toggleClass("success", status === statuses.saved);
+      AP.resize();
+   };
+
    var baseUrl = getUrlParam('xdm_e') + getUrlParam('cp');
    $.getScript(baseUrl + '/atlassian-connect/all.js', function() {
       // your calls to AP here
@@ -93,6 +153,8 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
 
       var issueKey = getUrlParam('issueKey');
 
+      // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
+      // properties...or maybe just a refresh button per property
       getIssueEntityProperties(issueKey).done(function(data) {
          var sortedProperties = data.keys.sort(function(a, b) {
             return a.key.localeCompare(b.key);
@@ -111,9 +173,45 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                editorObject.text(JSON.stringify(data.value, null, 2));
                var editorId = "editor" + ID();
                editorObject.attr('id', editorId);
+
+               // Create this editor and start manipulating it
                var editor = ace.edit(editorId);
                editor.setTheme("ace/theme/monokai");
                editor.getSession().setMode("ace/mode/json");
+
+               var updateTimeout;
+
+               editor.getSession().on('change', function(e) {
+                  // TODO get the value, check to see if it is valid JSON, then attempt to post it
+                  // back to the 
+                  console.log(e);
+                  // TODO debounce this by 500ms
+                  var status = propertyPanel.find('.status');
+                  var rawData = editor.getValue();
+                  if(isValidJson(rawData)) {
+                     // TODO update the entity properties
+                     updateStatus(status, statuses.saving);
+
+                     if(updateTimeout) {
+                        clearTimeout(updateTimeout);
+                     }
+
+                     var updateProperty = function() {
+                        setIssueEntityProperty(issueKey, property.key, JSON.parse(rawData)).done(function() {
+                           updateStatus(status, statuses.saved);
+                           setTimeout(function() {
+                              updateStatus(status, statuses.blank);
+                           }, 3000);
+                        });
+                     };
+
+                     updateTimeout = setTimeout(updateProperty, 400);
+                  } else {
+                     console.log("Data invalid");
+                     updateStatus(status, statuses.error);
+                     // TODO show an error state highlighting that the errors need to be cleaned up
+                  }
+               });
             }));
          });
 
@@ -121,10 +219,6 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             console.log("all done");
             AP.resize();
          });
-
-         AP.resize();
-
-         // Render the keys to the screen
       });
 
       AP.resize();

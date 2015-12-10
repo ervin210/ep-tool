@@ -1,17 +1,31 @@
 body.issue-entity-properties {
    background-color: white;
 
-   .editor {
-      height: 150px;
-   }
-
    .property {
-      margin-bottom: 10px;
+      margin-bottom: 0px;
       position: relative;
-   }
 
-   .delete-button {
-      position: absolute;
-      right: 0px;
+      .delete-button {
+         position: absolute;
+         right: 0px;
+      }
+
+      .editor {
+         height: 150px;
+      }
+
+      .status {
+         &.success {
+            color: @aui-color-green;
+         }
+
+         &.pending {
+            color: @aui-color-yellow;
+         }
+
+         &.error {
+            color: @aui-color-red;
+         }
+      }
    }
 }
