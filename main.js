@@ -52,6 +52,42 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
                height: 16,
                url: '/static/images/entity-properties-icon-16.png'
             }
+         }, {
+            key: 'issue-type-entitiy-properties-web-item',
+            name: {
+               value: 'Entity properties'
+            },
+            url: '/panel/issue-type',
+            location: 'element_options_section/issue_types_section',
+            weight: 1000,
+            tooltip: {
+               value: 'Entity properties browser for issue types'
+            },
+            context: 'page'
+         }, {
+            key: 'workflow-entitiy-properties-web-item',
+            name: {
+               value: 'Entity properties'
+            },
+            url: '/panel/workflows',
+            location: 'element_options_section/workflows_section',
+            weight: 1000,
+            tooltip: {
+               value: 'Entity properties browser for workflows'
+            },
+            context: 'page'
+         }, {
+            key: 'user-entitiy-properties-web-item',
+            name: {
+               value: 'Entity properties'
+            },
+            url: '/panel/user',
+            location: 'system.user.options/personal',
+            weight: 1000,
+            tooltip: {
+               value: 'Entity properties browser for you'
+            },
+            context: 'page'
          }]
       }
    });
