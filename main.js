@@ -12,6 +12,7 @@ app.set('views', __dirname + '/views');
 // Register static variables
 app.use('/static/images', express.static('static/images'));
 app.use('/static/js', express.static('static-js'));
+app.use('/static/css', express.static('static-css'));
 app.use('/static/ace', express.static('static/ace'));
 
 // Variables for setting up this addon
