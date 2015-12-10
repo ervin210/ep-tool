@@ -40,6 +40,15 @@ module.exports = function(grunt) {
             }
          }
       },
+      less: {
+         compile: {
+            options: {
+               files: {
+                  "static-css/all.css": "static/less/all.less"
+               }
+            }
+         }
+      },
       express: {
          dev: {
             options: {
@@ -65,6 +74,10 @@ module.exports = function(grunt) {
                'static/js/**/*.js' 
             ],
             tasks: [ 'requirejs' ]
+         },
+         less: {
+            files: [ 'static/less/**/*.less' ],
+            tasks: [ 'less:compile' ]
          }
       }
    });
@@ -74,6 +87,7 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-express-server');
    grunt.loadNpmTasks('grunt-contrib-watch');
    grunt.loadNpmTasks('grunt-contrib-requirejs');
+   grunt.loadNpmTasks('grunt-contrib-less');
 
    // Default task(s).
    grunt.registerTask('default', ['express:dev', 'watch']);
