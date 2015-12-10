@@ -13,11 +13,21 @@
       <script src="/static/js/app/issue-entity-properties.js" type="text/javascript"></script>
       <script type="text/javascript">require(['app/issue-entity-properties']);</script>
 
+      <style>
+         .editor {
+            height: 150px;
+         }
+      </style>
+
       {{=<% %>=}}
       <script id="property-panel" type="x-tmpl-mustache">
-         <div class="property">
-            <p class="property-key">{{propertyKey}}</p>
-            <div class="property-value">{{value}}</div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">{{key}}</h3>
+            </div>
+            <div class="panel-body">
+               <div class="editor"></div>
+            </div>
          </div>
       </script>
       <%={{ }}=%>

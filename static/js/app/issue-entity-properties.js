@@ -1,4 +1,4 @@
-define(['../helpers/MustacheLoader'], function(ML) {
+define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
    var getUrlParam = function (param) {
       var codedParam = (new RegExp(param + '=([^&]+)')).exec(window.location.search)[1];
       return decodeURIComponent(codedParam);
@@ -55,6 +55,9 @@ define(['../helpers/MustacheLoader'], function(ML) {
       });
    };
 
+   ace.config.set('themePath', '/static/ace/themes');
+   ace.config.set('modePath', '/static/ace/mode');
+
    var setAddonProperties = function(pKey, data) {
       return $.Deferred(function(deferred) {
          request({
@@ -75,6 +78,13 @@ define(['../helpers/MustacheLoader'], function(ML) {
       });
    };
 
+   var ID = function () {
+     // Math.random should be unique because of its seeding algorithm.
+     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+     // after the decimal.
+     return '_' + Math.random().toString(36).substr(2, 9);
+   };
+
    var baseUrl = getUrlParam('xdm_e') + getUrlParam('cp');
    $.getScript(baseUrl + '/atlassian-connect/all.js', function() {
       // your calls to AP here
@@ -90,13 +100,26 @@ define(['../helpers/MustacheLoader'], function(ML) {
 
          var propertiesDiv = AJS.$(".properties");
          propertiesDiv.empty();
+         var requests = [];
          AJS.$.each(sortedProperties, function(i, property) {
-            var data = { propertyKey: property.key };
-            var propertyPanel = AJS.$(templates.render('property-panel', data)).appendTo(propertiesDiv);
-            getIssueEntityProperty(issueKey, property.key).done(function(data) {
+            var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
+            var request = getIssueEntityProperty(issueKey, property.key);
+
+            requests.push(request.then(function(data) {
                console.log(data);
-               propertyPanel.find('.property-value').text(data.value);
-            });
+               var editorObject = propertyPanel.find('.editor');
+               editorObject.text(JSON.stringify(data.value, null, 2));
+               var editorId = "editor" + ID();
+               editorObject.attr('id', editorId);
+               var editor = ace.edit(editorId);
+               editor.setTheme("ace/theme/monokai");
+               editor.getSession().setMode("ace/mode/json");
+            }));
+         });
+
+         AJS.$.when(requests).done(function() {
+            console.log("all done");
+            AP.resize();
          });
 
          AP.resize();
