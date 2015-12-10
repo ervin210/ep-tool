@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 
+app.use('/static', express.static('static'));
+
 var hostUrl = process.env.HOST_URL || "http://localhost";
 var serverPort = process.env.PORT || 3000;
 
@@ -24,6 +26,33 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       },
       scopes: ["read", "write"],
       modules: {
+         jiraIssueTabPanels: [{
+            url: "/panel/issue",
+            weight: 100,
+            key: "issue-entity-tab",
+            name: {
+               value: "Entity properties"
+            },
+            conditions: [{ condition: 'user_is_logged_in' }]
+         }],
+         webItems: [{
+            key: 'project-entity-properties-web-item',
+            name: {
+               value: "Entity properties"
+            },
+            url: '/panel/project',
+            location: 'jira.project.sidebar.navigation',
+            weight: 1000,
+            tooltip: {
+               value: 'Project entity properties browser'
+            },
+            context: 'page',
+            icon: {
+               width: 16,
+               height: 16,
+               url: '/static/images/entity-properties-icon-16.png'
+            }
+         }]
       }
    });
 })
