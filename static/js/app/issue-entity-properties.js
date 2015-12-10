@@ -148,7 +148,6 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
    var baseUrl = getUrlParam('xdm_e') + getUrlParam('cp');
    $.getScript(baseUrl + '/atlassian-connect/all.js', function() {
       // your calls to AP here
-      console.log("I can use AP now!");
       var templates = ML.load();
 
       var issueKey = getUrlParam('issueKey');
@@ -168,7 +167,6 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var request = getIssueEntityProperty(issueKey, property.key);
 
             requests.push(request.then(function(data) {
-               console.log(data);
                var editorObject = propertyPanel.find('.editor');
                editorObject.text(JSON.stringify(data.value, null, 2));
                var editorId = "editor" + ID();
@@ -182,14 +180,9 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                var updateTimeout;
 
                editor.getSession().on('change', function(e) {
-                  // TODO get the value, check to see if it is valid JSON, then attempt to post it
-                  // back to the 
-                  console.log(e);
-                  // TODO debounce this by 500ms
                   var status = propertyPanel.find('.status');
                   var rawData = editor.getValue();
                   if(isValidJson(rawData)) {
-                     // TODO update the entity properties
                      updateStatus(status, statuses.saving);
 
                      if(updateTimeout) {
@@ -207,17 +200,23 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
 
                      updateTimeout = setTimeout(updateProperty, 400);
                   } else {
-                     console.log("Data invalid");
-                     updateStatus(status, statuses.error);
-                     // TODO show an error state highlighting that the errors need to be cleaned up
+                     updateStatus(status, statuses.invalid);
                   }
                });
             }));
          });
 
          AJS.$.when(requests).done(function() {
-            console.log("all done");
             AP.resize();
+         });
+      });
+
+      AJS.$("#property-filter").keyup(function() {
+         var filterText = AJS.$(this).val();
+         AJS.$(".properties .property").each(function(i, element) {
+            var self = AJS.$(this);
+            var shouldShow = self.data('property-key').indexOf(filterText) >= 0;
+            self.toggleClass('hidden', !shouldShow);
          });
       });
 
