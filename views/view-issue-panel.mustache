@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.min.js"></script>
+      <link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/5.9.4/css/aui.css" media="all">
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+      <script src="//aui-cdn.atlassian.com/aui-adg/5.9.4/js/aui.js"></script>
+      <script src="//aui-cdn.atlassian.com/aui-adg/5.9.4/js/aui-datepicker.js"></script>
+      <link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/5.9.4/css/aui-experimental.css" media="all">
+      <script src="//aui-cdn.atlassian.com/aui-adg/5.9.4/js/aui-experimental.js"></script>
+      <script src="//aui-cdn.atlassian.com/aui-adg/5.9.4/js/aui-soy.js"></script>
+
+      <script src="/static/js/app/issue-entity-properties.js" type="text/javascript"></script>
+      <script type="text/javascript">require(['app/issue-entity-properties']);</script>
+
+      {{=<% %>=}}
+      <script id="property-panel" type="x-tmpl-mustache">
+         <div class="property">
+            <p class="property-key">{{propertyKey}}</p>
+            <div class="property-value">{{value}}</div>
+         </div>
+      </script>
+      <%={{ }}=%>
+   </head>
+   <body>
+      <section id="content" class="ac-content">
+         <div class="properties"></div>
+      </section>
+   </body>
+</html>

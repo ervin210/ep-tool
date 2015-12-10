@@ -1,13 +1,24 @@
 var express = require('express');
 var app = express();
 
-app.use('/static', express.static('static'));
+var mustacheExpress = require('mustache-express');
 
+
+// Register '.mustache' extension with The Mustache Express
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', __dirname + '/views');
+
+// Register static variables
+app.use('/static/images', express.static('static/images'));
+app.use('/static/js', express.static('static-js'));
+
+// Variables for setting up this addon
 var hostUrl = process.env.HOST_URL || "http://localhost";
 var serverPort = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
-   res.send('Hello World!');
+   res.send('TODO this should link to the docs pages');
 });
 
 app.get('/jira/atlassian-connect.json', function(req, res) {
@@ -27,7 +38,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       scopes: ["read", "write"],
       modules: {
          jiraIssueTabPanels: [{
-            url: "/panel/issue",
+            url: "/panel/issue?issueId={issue.id}&issueKey={issue.key}",
             weight: 100,
             key: "issue-entity-tab",
             name: {
@@ -92,6 +103,10 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       }
    });
 })
+
+app.get('/panel/issue', function(req, res) {
+   res.render('view-issue-panel');
+});
 
 var server = app.listen(serverPort, function () {
    var host = server.address().address;
