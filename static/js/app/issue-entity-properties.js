@@ -241,7 +241,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var shouldShow = self.data('property-key').indexOf(filterText) >= 0;
             self.toggleClass('hidden', !shouldShow);
          });
-         AP.rezize();
+         AP.resize();
       });
 
       AJS.$(".properties").on('click', '.property .delete-button', function(e) {
@@ -251,6 +251,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          console.log("Deleting: " + propertyKey);
          removeIssueEntityProperty(issueKey, propertyKey).done(function() {
             propertyDiv.remove();
+            AP.resize();
          });
       });
 
@@ -297,14 +298,25 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          var propertyKey = AJS.$("#add-property-key").val();
          var propertyValue = addPropertyEditor.getValue();
          if(isBlank(propertyKey)) {
-            // TODO show an error message about a blank key
+            AP.require("messages", function(messages){
+               messages.error('Property key is blank', 'Please provide a property key that is not blank. Blank property keys cannot be saved', {
+                  fadeout: true,
+                  delay: 5000
+               });
+            });
          } else {
             if(isValidJson(propertyValue)) {
                // Send the post to the rest resource
                var request = setIssueEntityProperty(issueKey, propertyKey, JSON.parse(propertyValue));
                
                request.done(function() {
-                  // Show a message that the property was added successfully
+                  // Show a message saying that the save succeeded
+                  AP.require("messages", function(messages){
+                     messages.success("Saved property '" + propertyKey + "'", '', {
+                        fadeout: true,
+                        delay: 2000
+                     });
+                  });
                   // Close the add property form
                   closeAddProperty();
                   // Refresh the list of properties
@@ -312,11 +324,21 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                });
 
                request.fail(function() {
-                  // TODO what do we do when the request fails?
+                  AP.require("messages", function(messages){
+                     messages.error('Failed to save property', 'Please ensure that the data that you are trying to save is correct.', {
+                        fadeout: true,
+                        delay: 5000
+                     });
+                  });
                });
 
             } else {
-               // TODO what do we do when the request succeeds
+               AP.require("messages", function(messages){
+                  messages.error('Property value is not valid JSON', 'Please ensure that you provide valid JSON before trying to save the property.', {
+                     fadeout: true,
+                     delay: 5000
+                  });
+               });
             }
          }
       });
