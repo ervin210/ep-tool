@@ -1,4 +1,8 @@
 define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
+   function isBlank(str) {
+      return (!str || /^\s*$/.test(str));
+   }
+
    var getUrlParam = function (param) {
       var codedParam = (new RegExp(param + '=([^&]+)')).exec(window.location.search)[1];
       return decodeURIComponent(codedParam);
@@ -44,6 +48,23 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                type: 'PUT',
                contentType: 'application/json',
                data: JSON.stringify(propertyValue),
+               success: function(data) {
+                  self.resolve();
+               }, error: function() {
+                  self.reject();
+               }
+            });
+         });
+      });
+   };
+
+   var removeIssueEntityProperty = function(issueKey, propertyKey) {
+      return $.Deferred(function(self) {
+         AP.require(['request'], function(request) {
+            request({
+               url: '/rest/api/2/issue/' + issueKey + '/properties/' + propertyKey,
+               type: 'DELETE',
+               contentType: 'application/json',
                success: function(data) {
                   self.resolve();
                }, error: function() {
@@ -154,62 +175,64 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
 
       // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
       // properties...or maybe just a refresh button per property
-      getIssueEntityProperties(issueKey).done(function(data) {
-         var sortedProperties = data.keys.sort(function(a, b) {
-            return a.key.localeCompare(b.key);
-         });
+      var refreshPropertiesList = function() {
+         getIssueEntityProperties(issueKey).done(function(data) {
+            var sortedProperties = data.keys.sort(function(a, b) {
+               return a.key.localeCompare(b.key);
+            });
 
-         var propertiesDiv = AJS.$(".properties");
-         propertiesDiv.empty();
-         var requests = [];
-         AJS.$.each(sortedProperties, function(i, property) {
-            var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
-            var request = getIssueEntityProperty(issueKey, property.key);
+            var propertiesDiv = AJS.$(".properties");
+            propertiesDiv.empty();
+            var requests = [];
+            AJS.$.each(sortedProperties, function(i, property) {
+               var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
+               var request = getIssueEntityProperty(issueKey, property.key);
 
-            requests.push(request.then(function(data) {
-               var editorObject = propertyPanel.find('.editor');
-               editorObject.text(JSON.stringify(data.value, null, 2));
-               var editorId = "editor" + ID();
-               editorObject.attr('id', editorId);
+               requests.push(request.then(function(data) {
+                  var editorObject = propertyPanel.find('.editor');
+                  editorObject.text(JSON.stringify(data.value, null, 2));
+                  var editorId = "editor" + ID();
+                  editorObject.attr('id', editorId);
 
-               // Create this editor and start manipulating it
-               var editor = ace.edit(editorId);
-               editor.setTheme("ace/theme/monokai");
-               editor.getSession().setMode("ace/mode/json");
+                  // Create this editor and start manipulating it
+                  var editor = ace.edit(editorId);
+                  editor.setTheme("ace/theme/monokai");
+                  editor.getSession().setMode("ace/mode/json");
 
-               var updateTimeout;
+                  var updateTimeout;
 
-               editor.getSession().on('change', function(e) {
-                  var status = propertyPanel.find('.status');
-                  var rawData = editor.getValue();
-                  if(isValidJson(rawData)) {
-                     updateStatus(status, statuses.saving);
+                  editor.getSession().on('change', function(e) {
+                     var status = propertyPanel.find('.status');
+                     var rawData = editor.getValue();
+                     if(isValidJson(rawData)) {
+                        updateStatus(status, statuses.saving);
 
-                     if(updateTimeout) {
-                        clearTimeout(updateTimeout);
+                        if(updateTimeout) {
+                           clearTimeout(updateTimeout);
+                        }
+
+                        var updateProperty = function() {
+                           setIssueEntityProperty(issueKey, property.key, JSON.parse(rawData)).done(function() {
+                              updateStatus(status, statuses.saved);
+                              setTimeout(function() {
+                                 updateStatus(status, statuses.blank);
+                              }, 3000);
+                           });
+                        };
+
+                        updateTimeout = setTimeout(updateProperty, 400);
+                     } else {
+                        updateStatus(status, statuses.invalid);
                      }
+                  });
+               }));
+            });
 
-                     var updateProperty = function() {
-                        setIssueEntityProperty(issueKey, property.key, JSON.parse(rawData)).done(function() {
-                           updateStatus(status, statuses.saved);
-                           setTimeout(function() {
-                              updateStatus(status, statuses.blank);
-                           }, 3000);
-                        });
-                     };
-
-                     updateTimeout = setTimeout(updateProperty, 400);
-                  } else {
-                     updateStatus(status, statuses.invalid);
-                  }
-               });
-            }));
+            AJS.$.when(requests).done(function() {
+               AP.resize();
+            });
          });
-
-         AJS.$.when(requests).done(function() {
-            AP.resize();
-         });
-      });
+      };
 
       AJS.$("#property-filter").keyup(function() {
          var filterText = AJS.$(this).val();
@@ -218,8 +241,87 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var shouldShow = self.data('property-key').indexOf(filterText) >= 0;
             self.toggleClass('hidden', !shouldShow);
          });
+         AP.rezize();
       });
 
+      AJS.$(".properties").on('click', '.property .delete-button', function(e) {
+         var deleteButton = AJS.$(this);
+         var propertyDiv = deleteButton.closest('.property');
+         var propertyKey = propertyDiv.data('property-key');
+         console.log("Deleting: " + propertyKey);
+         removeIssueEntityProperty(issueKey, propertyKey).done(function() {
+            propertyDiv.remove();
+         });
+      });
+
+      var addPropertyEditor;
+
+      AJS.$("#add-property-button").click(function() {
+         console.log("Add clicked...");
+         var addButton = AJS.$(this);
+         var addPropertyForm = AJS.$("#add-property-form");
+         // Stop hiding the form
+         addPropertyForm.removeClass("hidden");
+
+         // Load the editor if required
+         if(!addPropertyEditor) {
+            var editorObject = addPropertyForm.find('.editor');
+            var editorId = "editor" + ID();
+            editorObject.attr('id', editorId);
+
+            // Create this editor and start manipulating it
+            addPropertyEditor = ace.edit(editorId);
+            addPropertyEditor.setTheme("ace/theme/monokai");
+            addPropertyEditor.getSession().setMode("ace/mode/json");
+         }
+
+         // Resize the form
+         AP.resize();
+         addButton.addClass("hidden");
+      });
+
+      var closeAddProperty = function() {
+         AJS.$("#add-property-form").addClass("hidden");
+         AJS.$("#add-property-button").removeClass("hidden");
+      };
+
+      AJS.$("#add-property-cancel").click(function(e) {
+         e.preventDefault();
+         closeAddProperty();
+      });
+
+      AJS.$("#add-property-save").click(function(e) {
+         e.preventDefault();
+
+         // Verify that the data is correct
+         var propertyKey = AJS.$("#add-property-key").val();
+         var propertyValue = addPropertyEditor.getValue();
+         if(isBlank(propertyKey)) {
+            // TODO show an error message about a blank key
+         } else {
+            if(isValidJson(propertyValue)) {
+               // Send the post to the rest resource
+               var request = setIssueEntityProperty(issueKey, propertyKey, JSON.parse(propertyValue));
+               
+               request.done(function() {
+                  // Show a message that the property was added successfully
+                  // Close the add property form
+                  closeAddProperty();
+                  // Refresh the list of properties
+                  refreshPropertiesList();
+               });
+
+               request.fail(function() {
+                  // TODO what do we do when the request fails?
+               });
+
+            } else {
+               // TODO what do we do when the request succeeds
+            }
+         }
+      });
+
+      refreshPropertiesList();
       AP.resize();
    });
 });

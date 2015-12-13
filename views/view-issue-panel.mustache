@@ -31,13 +31,40 @@
    </head>
    <body class="issue-entity-properties">
       <section id="content" class="ac-content">
-         <form class="aui top-label">
-            <fieldset class="top-label">
-               <div class="field-group top-label">
-                  <input class="text" type="text" id="property-filter" placeholder="Property filter..."></input>
+         <form id="add-property-form" class="aui hidden">
+            <h3>Add property</h3>
+            <fieldset>
+               <div class="field-group">
+                   <label for="add-property-key">Property key</label>
+                   <input class="text long-field" id="add-property-key" title="property key" type="text" />
+
+                   <div class="description">The key of your property.</div>
+               </div>
+               <div class="field-group">
+                   <label for="add-property-value-editor">Property value</label>
+                   <div class="panel-body">
+                      <div id="add-property-value-editor" class="editor"></div>
+                   </div>
                </div>
             </fieldset>
+            <div class="buttons-container">
+               <div class="buttons">
+                   <input class="button submit" value="Save" id="add-property-save" type="submit">
+                   <a id="add-property-cancel" class="cancel" href="#">Cancel</a>
+               </div>
+            </div>
          </form>
+
+         <div class="controls">
+            <button id="add-property-button" class="aui-button add-property"><span class="aui-icon aui-icon-small aui-iconfont-add"></span> Add property</button>
+            <form class="aui top-label">
+               <fieldset class="top-label">
+                  <div class="field-group top-label">
+                     <input class="text" type="text" id="property-filter" placeholder="Property filter..."></input>
+                  </div>
+               </fieldset>
+            </form>
+         </div>
 
          <div class="properties"></div>
       </section>
