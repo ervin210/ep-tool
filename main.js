@@ -37,7 +37,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       authentication: {
          type: "none"
       },
-      scopes: ["read", "write", "delete"],
+      scopes: ["read", "write", "delete", "project_admin"],
       modules: {
          jiraIssueTabPanels: [{
             url: "/panel/issue?issueId={issue.id}&issueKey={issue.key}",
