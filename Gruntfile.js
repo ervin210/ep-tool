@@ -32,11 +32,11 @@ module.exports = function(grunt) {
                   }
                },
                wrapShim: true,
-               modules: [
-                  {
-                     name: 'app/issue-entity-properties'
-                  }
-               ]
+               modules: [{
+                  name: 'app/issue-entity-properties'
+               }, {
+                  name: 'app/project-entity-properties'
+               }]
             }
          }
       },

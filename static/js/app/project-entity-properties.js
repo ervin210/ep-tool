@@ -8,11 +8,11 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       return decodeURIComponent(codedParam);
    };
 
-   var getIssueEntityProperties = function(issueKey) {
+   var getProjectEntityProperties = function(projectKey) {
       return $.Deferred(function(self) {
          AP.require(['request'], function(request) {
             request({
-               url: '/rest/api/2/issue/' + issueKey + '/properties',
+               url: '/rest/api/2/project/' + projectKey + '/properties',
                type: 'GET',
                success: function(data) {
                   self.resolve(JSON.parse(data));
@@ -24,11 +24,11 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       });
    };
 
-   var getIssueEntityProperty = function(issueKey, propertyKey) {
+   var getProjectEntityProperty = function(projectKey, propertyKey) {
       return $.Deferred(function(self) {
          AP.require(['request'], function(request) {
             request({
-               url: '/rest/api/2/issue/' + issueKey + '/properties/' + propertyKey,
+               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
                type: 'GET',
                success: function(data) {
                   self.resolve(JSON.parse(data));
@@ -40,11 +40,11 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       });
    };
 
-   var setIssueEntityProperty = function(issueKey, propertyKey, propertyValue) {
+   var setProjectEntityProperty = function(projectKey, propertyKey, propertyValue) {
       return $.Deferred(function(self) {
          AP.require(['request'], function(request) {
             request({
-               url: '/rest/api/2/issue/' + issueKey + '/properties/' + propertyKey,
+               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
                type: 'PUT',
                contentType: 'application/json',
                data: JSON.stringify(propertyValue),
@@ -58,11 +58,11 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       });
    };
 
-   var removeIssueEntityProperty = function(issueKey, propertyKey) {
+   var removeProjectEntityProperty = function(projectKey, propertyKey) {
       return $.Deferred(function(self) {
          AP.require(['request'], function(request) {
             request({
-               url: '/rest/api/2/issue/' + issueKey + '/properties/' + propertyKey,
+               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
                type: 'DELETE',
                contentType: 'application/json',
                success: function(data) {
@@ -171,12 +171,12 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       // your calls to AP here
       var templates = ML.load();
 
-      var issueKey = getUrlParam('issueKey');
+      var projectKey = getUrlParam('projectKey');
 
       // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
       // properties...or maybe just a refresh button per property
       var refreshPropertiesList = function() {
-         getIssueEntityProperties(issueKey).done(function(data) {
+         getProjectEntityProperties(projectKey).done(function(data) {
             var sortedProperties = data.keys.sort(function(a, b) {
                return a.key.localeCompare(b.key);
             });
@@ -186,7 +186,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var requests = [];
             AJS.$.each(sortedProperties, function(i, property) {
                var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
-               var request = getIssueEntityProperty(issueKey, property.key);
+               var request = getProjectEntityProperty(projectKey, property.key);
 
                requests.push(request.then(function(data) {
                   var editorObject = propertyPanel.find('.editor');
@@ -212,7 +212,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                         }
 
                         var updateProperty = function() {
-                           setIssueEntityProperty(issueKey, property.key, JSON.parse(rawData)).done(function() {
+                           setProjectEntityProperty(projectKey, property.key, JSON.parse(rawData)).done(function() {
                               updateStatus(status, statuses.saved);
                               setTimeout(function() {
                                  updateStatus(status, statuses.blank);
@@ -249,7 +249,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          var propertyDiv = deleteButton.closest('.property');
          var propertyKey = propertyDiv.data('property-key');
          console.log("Deleting: " + propertyKey);
-         removeIssueEntityProperty(issueKey, propertyKey).done(function() {
+         removeProjectEntityProperty(projectKey, propertyKey).done(function() {
             propertyDiv.remove();
             AP.resize();
          });
@@ -284,12 +284,12 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       var closeAddProperty = function() {
          AJS.$("#add-property-form").addClass("hidden");
          AJS.$("#add-property-button").removeClass("hidden");
-         AP.resize();
       };
 
       AJS.$("#add-property-cancel").click(function(e) {
          e.preventDefault();
          closeAddProperty();
+         AP.resize();
       });
 
       AJS.$("#add-property-save").click(function(e) {
@@ -308,7 +308,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          } else {
             if(isValidJson(propertyValue)) {
                // Send the post to the rest resource
-               var request = setIssueEntityProperty(issueKey, propertyKey, JSON.parse(propertyValue));
+               var request = setProjectEntityProperty(projectKey, propertyKey, JSON.parse(propertyValue));
                
                request.done(function() {
                   // Show a message saying that the save succeeded

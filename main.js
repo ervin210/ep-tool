@@ -48,12 +48,20 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             },
             conditions: [{ condition: 'user_is_logged_in' }]
          }],
+         generalPages: [{
+            key: 'project-entity-properties-general-page',
+            name: {
+               value: 'Project entity properties'
+            },
+            url: '/panel/project?projectId={project.id}&projectKey={project.key}',
+            location: 'not-a-valid-location'
+         }],
          webItems: [{
             key: 'project-entity-properties-web-item',
             name: {
                value: "Entity properties"
             },
-            url: '/panel/project',
+            url: 'project-entity-properties-general-page',
             location: 'jira.project.sidebar.navigation',
             weight: 1000,
             tooltip: {
@@ -108,6 +116,10 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
 
 app.get('/panel/issue', function(req, res) {
    res.render('view-issue-panel');
+});
+
+app.get('/panel/project', function(req, res) {
+   res.render('view-project-panel');
 });
 
 var server = app.listen(serverPort, function () {
