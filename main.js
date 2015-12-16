@@ -37,7 +37,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       authentication: {
          type: "none"
       },
-      scopes: ["read", "write", "delete", "project_admin"],
+      scopes: ["read", "write", "delete", "project_admin", "admin"],
       modules: {
          jiraIssueTabPanels: [{
             url: "/panel/issue?issueId={issue.id}&issueKey={issue.key}",
@@ -54,6 +54,13 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
                value: 'Project entity properties'
             },
             url: '/panel/project?projectId={project.id}&projectKey={project.key}',
+            location: 'not-a-valid-location'
+         }, {
+            key: 'user-entity-properties-general-page',
+            name: {
+               value: 'User entity properties'
+            },
+            url: '/panel/user',
             location: 'not-a-valid-location'
          }],
          webItems: [{
@@ -102,7 +109,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             name: {
                value: 'Entity properties'
             },
-            url: '/panel/user',
+            url: 'user-entity-properties-general-page',
             location: 'system.user.options/personal',
             weight: 1000,
             tooltip: {
@@ -120,6 +127,10 @@ app.get('/panel/issue', function(req, res) {
 
 app.get('/panel/project', function(req, res) {
    res.render('view-project-panel');
+});
+
+app.get('/panel/user', function(req, res) {
+   res.render('view-user-panel');
 });
 
 var server = app.listen(serverPort, function () {

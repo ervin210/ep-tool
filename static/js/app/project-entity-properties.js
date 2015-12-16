@@ -96,6 +96,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
 
    ace.config.set('themePath', '/static/ace/themes');
    ace.config.set('modePath', '/static/ace/mode');
+   ace.config.set('workerPath', '/static/ace/worker');
 
    var setAddonProperties = function(pKey, data) {
       return $.Deferred(function(deferred) {
