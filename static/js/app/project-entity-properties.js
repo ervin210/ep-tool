@@ -1,4 +1,4 @@
-define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
+define(['../helpers/MustacheLoader', '../host/project', '../lib/ace'], function(ML, Project) {
    function isBlank(str) {
       return (!str || /^\s*$/.test(str));
    }
@@ -8,115 +8,9 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       return decodeURIComponent(codedParam);
    };
 
-   var getProjectEntityProperties = function(projectKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/project/' + projectKey + '/properties',
-               type: 'GET',
-               success: function(data) {
-                  self.resolve(JSON.parse(data));
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var getProjectEntityProperty = function(projectKey, propertyKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
-               type: 'GET',
-               success: function(data) {
-                  self.resolve(JSON.parse(data));
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var setProjectEntityProperty = function(projectKey, propertyKey, propertyValue) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
-               type: 'PUT',
-               contentType: 'application/json',
-               data: JSON.stringify(propertyValue),
-               success: function(data) {
-                  self.resolve();
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var removeProjectEntityProperty = function(projectKey, propertyKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/project/' + projectKey + '/properties/' + propertyKey,
-               type: 'DELETE',
-               contentType: 'application/json',
-               success: function(data) {
-                  self.resolve();
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-   
-   var getAddonProperties = function(pKey) {
-      return $.Deferred(function(deferred) {
-         request({
-            url: '/rest/atlassian-connect/1/addons/' + pluginKey + '/properties/' + propertyKey + "?jsonValue=true",
-            type: 'GET',
-            success: function(response) {
-               response = JSON.parse(response);
-               deferred.resolve(response);
-            },
-            error: function(response) {
-               console.log("Error loading API (" + uri + ")");
-               console.log(arguments);
-               deferred.reject();
-            },
-            contentType: "application/json"
-         });
-      });
-   };
-
    ace.config.set('themePath', '/static/ace/themes');
    ace.config.set('modePath', '/static/ace/mode');
    ace.config.set('workerPath', '/static/ace/worker');
-
-   var setAddonProperties = function(pKey, data) {
-      return $.Deferred(function(deferred) {
-         request({
-            url: '/rest/atlassian-connect/1/addons/' + pluginKey + '/properties/' + pKey,
-            type: 'PUT',
-            data: JSON.stringify(data),
-            success: function(response) {
-               response = JSON.parse(response);
-               deferred.resolve(response);
-            },
-            error: function(response) {
-               console.log("Error loading API (" + uri + ")");
-               console.log(arguments);
-               deferred.reject();
-            },
-            contentType: "application/json"
-         });
-      });
-   };
 
    var ID = function () {
      // Math.random should be unique because of its seeding algorithm.
@@ -177,7 +71,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
       // properties...or maybe just a refresh button per property
       var refreshPropertiesList = function() {
-         getProjectEntityProperties(projectKey).done(function(data) {
+         Project.getProperties(projectKey).done(function(data) {
             var sortedProperties = data.keys.sort(function(a, b) {
                return a.key.localeCompare(b.key);
             });
@@ -187,7 +81,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var requests = [];
             AJS.$.each(sortedProperties, function(i, property) {
                var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
-               var request = getProjectEntityProperty(projectKey, property.key);
+               var request = Project.getProperty(projectKey, property.key);
 
                requests.push(request.then(function(data) {
                   var editorObject = propertyPanel.find('.editor');
@@ -213,7 +107,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                         }
 
                         var updateProperty = function() {
-                           setProjectEntityProperty(projectKey, property.key, JSON.parse(rawData)).done(function() {
+                           Project.setProperty(projectKey, property.key, JSON.parse(rawData)).done(function() {
                               updateStatus(status, statuses.saved);
                               setTimeout(function() {
                                  updateStatus(status, statuses.blank);
@@ -250,7 +144,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          var propertyDiv = deleteButton.closest('.property');
          var propertyKey = propertyDiv.data('property-key');
          console.log("Deleting: " + propertyKey);
-         removeProjectEntityProperty(projectKey, propertyKey).done(function() {
+         Project.removeProperty(projectKey, propertyKey).done(function() {
             propertyDiv.remove();
             AP.resize();
          });
@@ -309,7 +203,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          } else {
             if(isValidJson(propertyValue)) {
                // Send the post to the rest resource
-               var request = setProjectEntityProperty(projectKey, propertyKey, JSON.parse(propertyValue));
+               var request = Project.setProperty(projectKey, propertyKey, JSON.parse(propertyValue));
                
                request.done(function() {
                   // Show a message saying that the save succeeded
