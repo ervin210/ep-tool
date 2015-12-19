@@ -1,4 +1,4 @@
-define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
+define(['../helpers/MustacheLoader', '../host/user', '../lib/ace'], function(ML, User) {
    function isBlank(str) {
       return (!str || /^\s*$/.test(str));
    }
@@ -8,79 +8,6 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       return decodeURIComponent(codedParam);
    };
 
-   var getUserEntityProperties = function(userKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/user/properties',
-               data: {
-                  userKey: userKey
-               },
-               type: 'GET',
-               success: function(data) {
-                  self.resolve(JSON.parse(data));
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var getUserEntityProperty = function(userKey, propertyKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/user/properties/' + encodeURI(propertyKey),
-               data: {
-                  userKey: userKey
-               },
-               type: 'GET',
-               success: function(data) {
-                  self.resolve(JSON.parse(data));
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var setUserEntityProperty = function(userKey, propertyKey, propertyValue) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/user/properties/' + encodeURI(propertyKey) + '?userKey=' + encodeURIComponent(userKey),
-               type: 'PUT',
-               contentType: 'application/json',
-               data: JSON.stringify(propertyValue),
-               success: function(data) {
-                  self.resolve();
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-
-   var removeUserEntityProperty = function(userKey, propertyKey) {
-      return $.Deferred(function(self) {
-         AP.require(['request'], function(request) {
-            request({
-               url: '/rest/api/2/user/properties/' + encodeURI(propertyKey) + '?userKey=' + encodeURIComponent(userKey),
-               type: 'DELETE',
-               contentType: 'application/json',
-               success: function(data) {
-                  self.resolve();
-               }, error: function() {
-                  self.reject();
-               }
-            });
-         });
-      });
-   };
-   
    ace.config.set('themePath', '/static/ace/themes');
    ace.config.set('modePath', '/static/ace/mode');
    ace.config.set('workerPath', '/static/ace/worker');
@@ -139,12 +66,53 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
       // your calls to AP here
       var templates = ML.load();
 
-      var currentUserKey = getUrlParam('user_key');
+      var initialUserKey = getUrlParam('user_key');
+      var currentUserKey = initialUserKey;
+
+      var setupCurrentUserSelector = function() {
+         var selector = AJS.$("#current-user-selector");
+
+         selector.auiSelect2({
+            placeholder: "Choose user...",
+            minimumInputLength: 1,
+            multiple: false,
+            maximumSelectionSize: 1,
+            escapeMarkup: function(x) { return x; },
+            initialSelection: function(element, callback) {
+               callback({id: initialUserKey, text: initialUserKey});
+            },
+            query: function(query) {
+               AP.require('request', function(request) {
+                  request({
+                     url: '/rest/api/2/user/picker',
+                     type: 'GET',
+                     data: {
+                        query: query.term,
+                        showAvatar: true
+                     },
+                     cache: false,
+                     success: function(rawData) {
+                        var searchUsers = JSON.parse(rawData).users;
+                        var results = searchUsers.map(function(user) { return { id: user.key, text: user.html }; });
+                        query.callback({ results: results });
+                     }
+                  });
+               });
+            }
+         });
+
+         selector.change(function() {
+            currentUserKey = selector.val();
+            refreshPropertiesList(currentUserKey);
+         });
+      };
+
+      setupCurrentUserSelector();
 
       // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
       // properties...or maybe just a refresh button per property
       var refreshPropertiesList = function(userKey) {
-         getUserEntityProperties(userKey).done(function(data) {
+         User.getProperties(userKey).done(function(data) {
             var sortedProperties = data.keys.sort(function(a, b) {
                return a.key.localeCompare(b.key);
             });
@@ -154,7 +122,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
             var requests = [];
             AJS.$.each(sortedProperties, function(i, property) {
                var propertyPanel = AJS.$(templates.render('property-panel', property)).appendTo(propertiesDiv);
-               var request = getUserEntityProperty(userKey, property.key);
+               var request = User.getProperty(userKey, property.key);
 
                requests.push(request.then(function(data) {
                   var editorObject = propertyPanel.find('.editor');
@@ -180,7 +148,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
                         }
 
                         var updateProperty = function() {
-                           setUserEntityProperty(userKey, property.key, JSON.parse(rawData)).done(function() {
+                           User.setProperty(userKey, property.key, JSON.parse(rawData)).done(function() {
                               updateStatus(status, statuses.saved);
                               setTimeout(function() {
                                  updateStatus(status, statuses.blank);
@@ -217,7 +185,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          var propertyDiv = deleteButton.closest('.property');
          var propertyKey = propertyDiv.data('property-key');
          console.log("Deleting: " + propertyKey);
-         removeUserEntityProperty(currentUserKey, propertyKey).done(function() {
+         User.removeProperty(currentUserKey, propertyKey).done(function() {
             propertyDiv.remove();
             AP.resize();
          });
@@ -276,7 +244,7 @@ define(['../helpers/MustacheLoader', '../lib/ace'], function(ML) {
          } else {
             if(isValidJson(propertyValue)) {
                // Send the post to the rest resource
-               var request = setUserEntityProperty(currentUserKey, propertyKey, JSON.parse(propertyValue));
+               var request = User.setProperty(currentUserKey, propertyKey, JSON.parse(propertyValue));
                
                request.done(function() {
                   // Show a message saying that the save succeeded
