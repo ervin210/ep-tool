@@ -54,14 +54,24 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
                value: 'Project entity properties'
             },
             url: '/panel/project?projectId={project.id}&projectKey={project.key}',
-            location: 'not-a-valid-location'
+            location: 'not-a-valid-location',
+            conditions: [{ condition: 'user_is_logged_in' }]
          }, {
             key: 'user-entity-properties-general-page',
             name: {
                value: 'User entity properties'
             },
             url: '/panel/user',
-            location: 'not-a-valid-location'
+            location: 'not-a-valid-location',
+            conditions: [{ condition: 'user_is_logged_in' }]
+         }, {
+            key: 'issue-type-entity-properties-general-page',
+            name: {
+               value: 'Issue type entity properties'
+            },
+            url: '/panel/issue-type',
+            location: 'not-a-valid-location',
+            conditions: [{ condition: 'user_is_logged_in' }]
          }],
          webItems: [{
             key: 'project-entity-properties-web-item',
@@ -85,7 +95,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             name: {
                value: 'Entity properties'
             },
-            url: '/panel/issue-type',
+            url: 'issue-type-entity-properties-general-page',
             location: 'element_options_section/issue_types_section',
             weight: 1000,
             tooltip: {
@@ -131,6 +141,10 @@ app.get('/panel/project', function(req, res) {
 
 app.get('/panel/user', function(req, res) {
    res.render('view-user-panel');
+});
+
+app.get('/panel/issue-type', function(req, res) {
+   res.render('view-issue-type-panel');
 });
 
 var server = app.listen(serverPort, function () {

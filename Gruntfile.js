@@ -20,6 +20,7 @@ module.exports = function(grunt) {
                baseUrl: '.',
                dir: 'static-js',
                paths: {
+                  underscore: 'lib/underscore'
                },
                shim: {
                   'jquery': {
@@ -38,6 +39,8 @@ module.exports = function(grunt) {
                   name: 'app/project-entity-properties'
                }, {
                   name: 'app/user-entity-properties'
+               }, {
+                  name: 'app/issue-type-entity-properties'
                }]
             }
          }
