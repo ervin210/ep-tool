@@ -72,13 +72,15 @@ define(['../helpers/MustacheLoader', '../host/user', '../lib/ace'], function(ML,
       var setupCurrentUserSelector = function() {
          var selector = AJS.$("#current-user-selector");
 
+         selector.attr('value', initialUserKey);
+
          selector.auiSelect2({
             placeholder: "Choose user...",
             minimumInputLength: 1,
             multiple: false,
             maximumSelectionSize: 1,
             escapeMarkup: function(x) { return x; },
-            initialSelection: function(element, callback) {
+            initSelection: function(element, callback) {
                callback({id: initialUserKey, text: initialUserKey});
             },
             query: function(query) {
