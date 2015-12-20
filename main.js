@@ -103,18 +103,6 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             },
             context: 'page'
          }, {
-            key: 'workflow-entitiy-properties-web-item',
-            name: {
-               value: 'Entity properties'
-            },
-            url: '/panel/workflows',
-            location: 'element_options_section/workflows_section',
-            weight: 1000,
-            tooltip: {
-               value: 'Entity properties browser for workflows'
-            },
-            context: 'page'
-         }, {
             key: 'user-entitiy-properties-web-item',
             name: {
                value: 'Entity properties'
