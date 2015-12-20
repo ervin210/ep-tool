@@ -1,4 +1,17 @@
-<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a
-href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a
-href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY
-3.0</a></div>
+# Entity Property Tool
+
+This codebase is written to be an easy to use tool to view and manipulate entity properties. To run it locally:
+
+    grunt
+
+Then visit: http://localhost:3000/jira/atlassian-connect.json
+
+You can install this addon into your development JIRA hosted application.
+
+## Acknowledgements
+
+Icons made by [Freepik][1] from [www.flaticon.com][2] is licensed by [CC BY 3.0][3].
+
+ [1]: http://www.freepik.com
+ [2]: http://www.flaticon.com
+ [3]: http://creativecommons.org/licenses/by/3.0/
