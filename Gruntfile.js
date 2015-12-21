@@ -113,5 +113,5 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-contrib-less');
 
    // Default task(s).
-   grunt.registerTask('default', ['requirejs', 'less', 'express:dev', 'watch']);
+   grunt.registerTask('default', ['requirejs:compile', 'less:compile', 'express:dev', 'watch']);
 };

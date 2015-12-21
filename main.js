@@ -135,6 +135,10 @@ app.get('/panel/issue-type', function(req, res) {
    res.render('view-issue-type-panel');
 });
 
+app.get('/rest/healthcheck', function(req, res) {
+   res.sendStatus(200);
+});
+
 var server = app.listen(serverPort, function () {
    var host = server.address().address;
    var port = server.address().port;
