@@ -1,4 +1,52 @@
+var _ = require('lodash');
+
 module.exports = function(grunt) {
+
+   var buildJsOptions = {
+      optimize: 'none',
+      appDir: 'static/js',
+      baseUrl: '.',
+      dir: 'static-js',
+      paths: {
+         underscore: 'lib/underscore'
+      },
+      shim: {
+         'jquery': {
+            deps: [],
+            exports: '$'
+         },
+         'aui': {
+            'deps': ['jquery'],
+            'exports': 'AJS'
+         }
+      },
+      wrapShim: true,
+      modules: [{
+         name: 'app/issue-entity-properties'
+      }, {
+         name: 'app/project-entity-properties'
+      }, {
+         name: 'app/user-entity-properties'
+      }, {
+         name: 'app/issue-type-entity-properties'
+      }]
+   };
+
+   var prodJsOptions = _.merge({}, buildJsOptions, {
+      optimize: 'uglify2'
+   });
+
+   var buildCssOptions = {
+      files: {
+         "static-css/all.css": "static/less/all.less"
+      }
+   };
+
+   var prodCssOptions = _.merge({}, buildCssOptions, {
+      options: {
+         compress: true
+      }
+   });
 
    // Project configuration.
    grunt.initConfig({
@@ -14,43 +62,15 @@ module.exports = function(grunt) {
       },
       requirejs: {
          compile: {
-            options: {
-               optimize: 'none',
-               appDir: 'static/js',
-               baseUrl: '.',
-               dir: 'static-js',
-               paths: {
-                  underscore: 'lib/underscore'
-               },
-               shim: {
-                  'jquery': {
-                     deps: [],
-                     exports: '$'
-                  },
-                  'aui': {
-                     'deps': ['jquery'],
-                     'exports': 'AJS'
-                  }
-               },
-               wrapShim: true,
-               modules: [{
-                  name: 'app/issue-entity-properties'
-               }, {
-                  name: 'app/project-entity-properties'
-               }, {
-                  name: 'app/user-entity-properties'
-               }, {
-                  name: 'app/issue-type-entity-properties'
-               }]
-            }
+            options: buildJsOptions
+         },
+         prod: {
+            options: prodJsOptions
          }
       },
       less: {
-         compile: {
-            files: {
-               "static-css/all.css": "static/less/all.less"
-            }
-         }
+         compile: buildCssOptions,
+         prod: prodCssOptions
       },
       express: {
          dev: {
