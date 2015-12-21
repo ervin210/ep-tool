@@ -12,7 +12,7 @@
    },
    "links": {
       "binary": {
-         "name": "docker.atlassian.io/atlassian/ep-tool",
+         "name": "docker2.atlassian.io/atlassian/ep-tool",
          "type": "docker",
          "tag": "{{RELEASE_VERSION}}"
       },
