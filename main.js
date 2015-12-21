@@ -19,6 +19,49 @@ app.use('/static/ace', express.static('static/ace'));
 var hostUrl = process.env.HOST_URL || "http://localhost";
 var serverPort = process.env.PORT || 3000;
 
+var zones = {
+   local: 0,
+   dev: 1,
+   dog: 2,
+   prod: 3
+};
+
+var zoneFromString = function(zone) {
+   switch(zone) {
+      case "useast.staging.atlassian.io":
+      case "uswest.staging.atlassian.io":
+         return zones.dog;
+
+      case "useast.atlassian.io":
+      case "uswest.atlassian.io":
+         return zones.prod;
+
+      case "domain.dev.atlassian.io":
+      case "application.dev.atlassian.io":
+      case "platform.dev.atlassian.io":
+         return zones.dev;
+   }
+   
+   return zones.local;
+};
+
+var getKeySuffixFromZone = function(zone) {
+   switch(zone) {
+      case zones.local:
+         return '.local';
+      case zones.dev:
+         return '.dev';
+      case zones.dog:
+         return '.dog';
+      case zones.prod: 
+         return '.prod';
+   }
+
+   return '';
+};
+
+var microsZone = zoneFromString(process.env.ZONE);
+
 app.get('/', function (req, res) {
    res.send('TODO this should link to the docs pages');
 });
@@ -26,7 +69,7 @@ app.get('/', function (req, res) {
 app.get('/jira/atlassian-connect.json', function(req, res) {
    res.json({
       name: 'Entity Property Tool',
-      key: 'com.atlassian.connect.entity-property-tool',
+      key: 'com.atlassian.connect.entity-property-tool' + getKeySuffixFromZone(microsZone),
       version: "1.0",
       description: 'An Atlassian Connect addon that allows every user to manipulate entity properties.',
       vendor: {
