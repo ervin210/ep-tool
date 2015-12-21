@@ -5,8 +5,7 @@
    "organization": "Ecosystem Engineering",
    "owners": [ "rmassaioli@atlassian.com" ],
    "scaling": {
-      "min": 1,
-      "instance": "nano"
+      "min": 1
    },
    "notifications": {
       "email": "rmassioli@atlassian.com"
