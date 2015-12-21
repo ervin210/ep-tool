@@ -2,7 +2,7 @@
 {
    "name": "Entity Property Tool",
    "description": "Atlassian Connect addon for browsing entity properties in JIRA",
-   "organisation": "Ecosystem Engineering",
+   "organization": "Ecosystem Engineering",
    "owners": [ "rmassaioli@atlassian.com" ],
    "scaling": {
       "min": 1,
