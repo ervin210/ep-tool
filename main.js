@@ -178,7 +178,7 @@ app.get('/panel/issue-type', function(req, res) {
    res.render('view-issue-type-panel');
 });
 
-app.get('/rest/healthcheck', function(req, res) {
+app.get('/rest/heartbeat', function(req, res) {
    res.sendStatus(200);
 });
 
