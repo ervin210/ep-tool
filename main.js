@@ -83,7 +83,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       scopes: ["read", "write", "delete", "project_admin", "admin"],
       modules: {
          jiraIssueTabPanels: [{
-            url: "/panel/issue?issueId={issue.id}&issueKey={issue.key}",
+            url: "/panel/issue?issue_id={issue.id}&issue_key={issue.key}",
             weight: 100,
             key: "issue-entity-tab",
             name: {
@@ -96,7 +96,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             name: {
                value: 'Project entity properties'
             },
-            url: '/panel/project?projectId={project.id}&projectKey={project.key}',
+            url: '/panel/project?project_id={project.id}&project_key={project.key}',
             location: 'not-a-valid-location',
             conditions: [{ condition: 'user_is_logged_in' }]
          }, {

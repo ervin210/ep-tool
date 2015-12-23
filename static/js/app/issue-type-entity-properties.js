@@ -1,12 +1,9 @@
-define(['underscore', '../helpers/MustacheLoader', '../host/issue-type', '../lib/ace'], function(_, ML, IssueType) {
+define(['underscore', '../helpers/MustacheLoader', '../host/issue-type', '../helpers/PageContext', '../lib/ace'], function(_, ML, IssueType, PC) {
    function isBlank(str) {
       return (!str || /^\s*$/.test(str));
    }
 
-   var getUrlParam = function (param) {
-      var codedParam = (new RegExp(param + '=([^&]+)')).exec(window.location.search)[1];
-      return decodeURIComponent(codedParam);
-   };
+   var pageContext = PC.load();
 
    ace.config.set('themePath', '/static/ace/themes');
    ace.config.set('modePath', '/static/ace/mode');
@@ -61,8 +58,7 @@ define(['underscore', '../helpers/MustacheLoader', '../host/issue-type', '../lib
       AP.resize();
    };
 
-   var baseUrl = getUrlParam('xdm_e') + getUrlParam('cp');
-   $.getScript(baseUrl + '/atlassian-connect/all.js', function() {
+   $.getScript(pageContext.productBaseUrl + '/atlassian-connect/all.js', function() {
       // your calls to AP here
       var templates = ML.load();
 

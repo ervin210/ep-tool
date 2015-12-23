@@ -1,12 +1,9 @@
-define(['../helpers/MustacheLoader', '../host/project', '../lib/ace'], function(ML, Project) {
+define(['../helpers/MustacheLoader', '../host/project', '../helpers/PageContext', '../lib/ace'], function(ML, Project, PC) {
    function isBlank(str) {
       return (!str || /^\s*$/.test(str));
    }
 
-   var getUrlParam = function (param) {
-      var codedParam = (new RegExp(param + '=([^&]+)')).exec(window.location.search)[1];
-      return decodeURIComponent(codedParam);
-   };
+   var pageContext = PC.load();
 
    ace.config.set('themePath', '/static/ace/themes');
    ace.config.set('modePath', '/static/ace/mode');
@@ -61,12 +58,11 @@ define(['../helpers/MustacheLoader', '../host/project', '../lib/ace'], function(
       AP.resize();
    };
 
-   var baseUrl = getUrlParam('xdm_e') + getUrlParam('cp');
-   $.getScript(baseUrl + '/atlassian-connect/all.js', function() {
+   $.getScript(pageContext.productBaseUrl + '/atlassian-connect/all.js', function() {
       // your calls to AP here
       var templates = ML.load();
 
-      var projectKey = getUrlParam('projectKey');
+      var projectKey = pageContext.project.key;
 
       // TODO make it so that we can press a refresh button and get a refreshed copy of all of these
       // properties...or maybe just a refresh button per property

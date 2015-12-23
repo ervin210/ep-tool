@@ -96,7 +96,7 @@ module.exports = function(grunt) {
                'Gruntfile.js',
                'static/js/**/*.js' 
             ],
-            tasks: [ 'requirejs' ]
+            tasks: [ 'requirejs:compile' ]
          },
          less: {
             files: [ 'static/less/**/*.less' ],
