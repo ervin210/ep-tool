@@ -16,8 +16,8 @@ app.use('/static/css', express.static('static-css'));
 app.use('/static/ace', express.static('static/ace'));
 
 // Variables for setting up this addon
-var hostUrl = process.env.HOST_URL || "http://localhost";
 var serverPort = process.env.PORT || 3000;
+var hostUrl = process.env.HOST_URL || "http://localhost:" + serverPort;
 
 var zones = {
    local: 0,
@@ -76,7 +76,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
          name: 'Atlassian',
          url: 'http://www.atlassian.com'
       },
-      baseUrl: hostUrl + ":" + serverPort,
+      baseUrl: hostUrl,
       authentication: {
          type: "none"
       },
