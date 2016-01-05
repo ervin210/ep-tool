@@ -2,11 +2,12 @@
 
 This codebase is written to be an easy to use tool to view and manipulate entity properties. To run it locally:
 
+    npm install
     grunt
 
 Then visit: http://localhost:3000/jira/atlassian-connect.json
 
-You can install this addon into your development JIRA hosted application.
+You can install this addon into your development JIRA hosted application that has Atlassian Connect enabled.
 
 ## Acknowledgements
 
