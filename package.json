@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "express-bunyan-logger": "^1.2.0",
     "mustache-express": "^1.2.1"
   }
 }

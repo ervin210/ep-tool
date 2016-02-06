@@ -1,8 +1,12 @@
 var express = require('express');
+var bunyan = require('express-bunyan-logger');
 var app = express();
 
 var mustacheExpress = require('mustache-express');
 
+// JSON Logging
+app.use(bunyan());
+app.use(bunyan.errorLogger());
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
