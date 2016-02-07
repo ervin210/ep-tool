@@ -71,6 +71,27 @@ app.get('/', function (req, res) {
 });
 
 app.get('/jira/atlassian-connect.json', function(req, res) {
+   var showCondition = [{
+      condition: 'user_is_logged_in'
+   }, {
+      or: [{
+         condition: 'entity_property_equal_to',
+         invert: true,
+         params: {
+            entity: 'addon',
+            propertyKey: 'ep-tool.disabled-for-all',
+            value: 'true'
+         }
+      }, {
+         condition: 'entity_property_equal_to',
+         params: {
+            entity: 'user',
+            propertyKey: 'ep-tool.enabled-for-me',
+            value: 'true'
+         }
+      }]
+   }];
+
    res.json({
       name: 'Entity Property Tool',
       key: 'com.atlassian.connect.entity-property-tool' + getKeySuffixFromZone(microsZone),
@@ -93,7 +114,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             name: {
                value: "Entity properties"
             },
-            conditions: [{ condition: 'user_is_logged_in' }]
+            conditions: showCondition
          }],
          generalPages: [{
             key: 'project-entity-properties-general-page',
@@ -101,24 +122,21 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
                value: 'Project entity properties'
             },
             url: '/panel/project?project_id={project.id}&project_key={project.key}',
-            location: 'not-a-valid-location',
-            conditions: [{ condition: 'user_is_logged_in' }]
+            location: 'not-a-valid-location'
          }, {
             key: 'user-entity-properties-general-page',
             name: {
                value: 'User entity properties'
             },
             url: '/panel/user',
-            location: 'not-a-valid-location',
-            conditions: [{ condition: 'user_is_logged_in' }]
+            location: 'not-a-valid-location'
          }, {
             key: 'issue-type-entity-properties-general-page',
             name: {
                value: 'Issue type entity properties'
             },
             url: '/panel/issue-type',
-            location: 'not-a-valid-location',
-            conditions: [{ condition: 'user_is_logged_in' }]
+            location: 'not-a-valid-location'
          }],
          webItems: [{
             key: 'project-entity-properties-web-item',
@@ -136,7 +154,8 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
                width: 16,
                height: 16,
                url: '/static/images/entity-properties-icon-16.png'
-            }
+            }, 
+            conditions: showCondition
          }, {
             key: 'issue-type-entitiy-properties-web-item',
             name: {
@@ -148,7 +167,8 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             tooltip: {
                value: 'Entity properties browser for issue types'
             },
-            context: 'page'
+            context: 'page',
+            conditions: showCondition
          }, {
             key: 'user-entitiy-properties-web-item',
             name: {
@@ -160,7 +180,8 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             tooltip: {
                value: 'Entity properties browser for you'
             },
-            context: 'page'
+            context: 'page',
+            conditions: showCondition
          }]
       }
    });
