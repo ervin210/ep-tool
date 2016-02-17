@@ -29,6 +29,8 @@ module.exports = function(grunt) {
          name: 'app/user-entity-properties'
       }, {
          name: 'app/issue-type-entity-properties'
+      }, {
+         name: 'app/configuration-page'
       }]
    };
 

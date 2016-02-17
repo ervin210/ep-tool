@@ -11,3 +11,10 @@
 # Compiled files
 /static-js
 /static-css
+/target
+/.npm
+/jira-run-pom.xml
+.DS_Store
+
+# Generated files
+/service-descriptor.json

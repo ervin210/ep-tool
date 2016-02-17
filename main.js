@@ -107,6 +107,18 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
       },
       scopes: ["read", "write", "delete", "project_admin", "admin"],
       modules: {
+         configurePage: {
+            "url": "/page/configuration",
+            "icon": {
+               "width": 80,
+               "height": 80,
+               "url": "/maps/icon.png"
+            },
+            "key": "configuration-page",
+            "name": {
+               "value": "Entity property tool configuration"
+            }
+         },
          jiraIssueTabPanels: [{
             url: "/panel/issue?issue_id={issue.id}&issue_key={issue.key}",
             weight: 100,
@@ -201,6 +213,10 @@ app.get('/panel/user', function(req, res) {
 
 app.get('/panel/issue-type', function(req, res) {
    res.render('view-issue-type-panel');
+});
+
+app.get('/page/configuration', function(req, res) {
+   res.render('configuration-page');
 });
 
 app.get('/rest/heartbeat', function(req, res) {
