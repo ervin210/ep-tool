@@ -192,8 +192,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             tooltip: {
                value: 'Entity properties browser for you'
             },
-            context: 'page',
-            conditions: showCondition
+            context: 'page'
          }]
       }
    });
