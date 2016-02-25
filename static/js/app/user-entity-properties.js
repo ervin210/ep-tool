@@ -278,6 +278,24 @@ define(['../helpers/MustacheLoader', '../host/user', '../helpers/PageContext', '
          }
       });
 
+      var userProperty = 'ep-tool.enabled-for-me';
+      var userPropertyRequest = User.getProperty(pageContext.user.key, userProperty);
+      var enabledForMeCheckbox = AJS.$("#toggle-enabled-for-me");
+
+      userPropertyRequest.done(function(property) {
+         enabledForMeCheckbox.prop('checked', property.value);
+      });
+
+      enabledForMeCheckbox.change(function() {
+         var isChecked = AJS.$(this).is(':checked');
+
+         User.setProperty(pageContext.user.key, userProperty, isChecked).done(function() {
+            if(currentUserKey == pageContext.user.key) {
+               refreshPropertiesList(currentUserKey);
+            }
+         });
+      });
+
       refreshPropertiesList(currentUserKey);
       AP.resize();
    });
