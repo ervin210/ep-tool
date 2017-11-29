@@ -34,15 +34,18 @@ var zoneFromString = function(zone) {
    switch(zone) {
       case "useast.staging.atlassian.io":
       case "uswest.staging.atlassian.io":
+      case "staging.public.atl-paas.net":
          return zones.dog;
 
       case "useast.atlassian.io":
       case "uswest.atlassian.io":
+      case "prod.public.atl-paas.net":
          return zones.prod;
 
       case "domain.dev.atlassian.io":
       case "application.dev.atlassian.io":
       case "platform.dev.atlassian.io":
+      case "dev.public.atl-paas.net":
          return zones.dev;
    }
    

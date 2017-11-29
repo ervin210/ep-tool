@@ -2,7 +2,10 @@
 {
    "name": "Entity Property Tool",
    "description": "Atlassian Connect addon for browsing entity properties in JIRA",
-   "externalAccess": true,
+   "network": {
+      "ingress": "external",
+      "egress":  "internet-only"
+   },
    "organization": "Ecosystem Engineering",
    "owners": [ "rmassaioli@atlassian.com" ],
    "scaling": {
@@ -17,7 +20,7 @@
    },
    "links": {
       "binary": {
-         "name": "docker2.atlassian.io/atlassian/ep-tool",
+         "name": "docker.atl-paas.net/atlassian/ep-tool",
          "type": "docker",
          "tag": "{{RELEASE_VERSION}}"
       },
