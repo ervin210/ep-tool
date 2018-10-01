@@ -141,7 +141,7 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
            tooltip: {
              value: 'Project entity properties browser'
            },
-           iconUrl: '/static/images/entity-properties-icon-16.png',
+           iconUrl: '/static/images/entity-properties-icon.svg',
            conditions: showCondition
          }],
          generalPages: [{
