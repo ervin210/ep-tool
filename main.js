@@ -131,14 +131,20 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             },
             conditions: showCondition
          }],
+         jiraProjectPages: [{
+           key: 'project-entity-properties-general-page',
+           name: {
+             value: 'Entity properties'
+           },
+           url: '/panel/project?project_id={project.id}&project_key={project.key}',
+           weight: 1000,
+           tooltip: {
+             value: 'Project entity properties browser'
+           },
+           iconUrl: '/static/images/entity-properties-icon.svg',
+           conditions: showCondition
+         }],
          generalPages: [{
-            key: 'project-entity-properties-general-page',
-            name: {
-               value: 'Project entity properties'
-            },
-            url: '/panel/project?project_id={project.id}&project_key={project.key}',
-            location: 'not-a-valid-location'
-         }, {
             key: 'user-entity-properties-general-page',
             name: {
                value: 'User entity properties'
@@ -154,24 +160,6 @@ app.get('/jira/atlassian-connect.json', function(req, res) {
             location: 'not-a-valid-location'
          }],
          webItems: [{
-            key: 'project-entity-properties-web-item',
-            name: {
-               value: "Entity properties"
-            },
-            url: 'project-entity-properties-general-page',
-            location: 'jira.project.sidebar.navigation',
-            weight: 1000,
-            tooltip: {
-               value: 'Project entity properties browser'
-            },
-            context: 'page',
-            icon: {
-               width: 16,
-               height: 16,
-               url: '/static/images/entity-properties-icon-16.png'
-            }, 
-            conditions: showCondition
-         }, {
             key: 'issue-type-entitiy-properties-web-item',
             name: {
                value: 'Entity properties'
