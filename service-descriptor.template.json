@@ -6,6 +6,10 @@
       "ingress": "external",
       "egress":  "internet-only"
    },
+   "resources": [{
+      "type": "globaledge",
+      "name": "ingress"
+   }],
    "organization": "Ecosystem Engineering",
    "owners": [ "rmassaioli@atlassian.com" ],
    "scaling": {

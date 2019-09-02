@@ -9,7 +9,6 @@ EXPOSE 8080
 ADD . /service
 WORKDIR /service
 RUN ["npm", "install"]
-RUN ["npm", "install", "-g", "grunt-cli"]
-RUN ["grunt", "requirejs:prod", "less:prod"]
+RUN ["npm", "run", "build-prod"]
 
 CMD ["node", "main.js"]
