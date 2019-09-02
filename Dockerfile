@@ -9,6 +9,6 @@ EXPOSE 8080
 ADD . /service
 WORKDIR /service
 RUN ["npm", "install"]
-RUN ["npm", "run", "build-prod"]
+RUN ["npm", "run", "build"]
 
 CMD ["node", "main.js"]
