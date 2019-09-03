@@ -32,24 +32,17 @@ var zones = {
 
 var zoneFromString = function(zone) {
    switch(zone) {
-      case "useast.staging.atlassian.io":
-      case "uswest.staging.atlassian.io":
-      case "staging.public.atl-paas.net":
-         return zones.dog;
+       case "staging":
+          return zones.dog;
 
-      case "useast.atlassian.io":
-      case "uswest.atlassian.io":
-      case "prod.public.atl-paas.net":
-         return zones.prod;
+       case "prod":
+          return zones.prod;
 
-      case "domain.dev.atlassian.io":
-      case "application.dev.atlassian.io":
-      case "platform.dev.atlassian.io":
-      case "dev.public.atl-paas.net":
-         return zones.dev;
-   }
-   
-   return zones.local;
+       case "dev":
+          return zones.dev;
+    }
+
+  return zones.local;
 };
 
 var getKeySuffixFromZone = function(zone) {
@@ -60,14 +53,14 @@ var getKeySuffixFromZone = function(zone) {
          return '.dev';
       case zones.dog:
          return '.dog';
-      case zones.prod: 
+      case zones.prod:
          return '.prod';
    }
 
    return '';
 };
 
-var microsZone = zoneFromString(process.env.ZONE);
+var microsZone = zoneFromString(process.env.MICROS_ENVTYPE);
 
 app.get('/', function (req, res) {
    res.send('TODO this should link to the docs pages');
