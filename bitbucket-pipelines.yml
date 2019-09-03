@@ -17,7 +17,8 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - npm install
           - npm run build
-  master:
+  branches:
+    master:
       - step:
           name: Build docker image
           script:
