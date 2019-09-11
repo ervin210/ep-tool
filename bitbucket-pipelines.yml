@@ -22,7 +22,7 @@ pipelines:
       - step:
           name: Build docker image
           image:
-            name: docker-proxy.services.atlassian.com/node:10
+            name: node:10
             username: rmassaioli
             password: $PIPELINES_JWT_TOKEN
           script:
@@ -40,7 +40,7 @@ pipelines:
           name: Deploy to staging
           deployment: staging
           image:
-            name: docker-proxy.services.atlassian.com/node:10
+            name: node:10
             username: rmassaioli
             password: $PIPELINES_JWT_TOKEN
           script:
@@ -68,7 +68,7 @@ pipelines:
           name: Deploy to prod
           deployment: production
           image:
-            name: docker-proxy.services.atlassian.com/node:10
+            name: node:10
             username: rmassaioli
             password: $PIPELINES_JWT_TOKEN
           trigger: manual
