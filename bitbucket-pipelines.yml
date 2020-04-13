@@ -9,6 +9,15 @@ options:
   docker: true
   size: 2x
 
+deploymentScript: &deploymentScript
+  script:
+    # Download and extract Atlas CLI
+    - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
+    # Install the Micros plugin
+    - ./atlas plugin install -n micros
+    # Lastly, run the deployment as normal
+    - ./atlas micros service deploy -s my-cool-service -f my-cool-service.sd.yml -e $BITBUCKET_DEPLOYMENT_ENVIRONMENT
+
 pipelines:
   default:
     - step:
@@ -34,31 +43,31 @@ pipelines:
             - docker
       - step:
           name: Deploy to staging
-          deployment: staging
+          deployment: adev
           script:
             # set up step variables and auth data
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
-            # download micros CLI
-            - curl -O -H "Authorization:$PIPELINES_JWT_TOKEN" https://micros-proxy.services.atlassian.com/micros-stable/micros.tar.gz
-            - tar -xvf micros.tar.gz --transform s/micros/micros-cli/
-            - chmod +x micros-cli
+            # Download and extract Atlas CLI
+            - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
+            # Install the Micros plugin
+            - ./atlas plugin install -n micros
             # generate the service descriptor
             - echo "RELEASE_VERSION" > "template-vars.csv"
             - echo "${BITBUCKET_BUILD_NUMBER}" >> "template-vars.csv"
             - npm install mustang
             - $(npm bin)/mustang -t "service-descriptor.template.json" -i "template-vars.csv" > "service-descriptor.json"
-            # micros deploy the service
-            - ./micros-cli service:deploy ep-tool -f service-descriptor.json -e adev
+            # Lastly, run the deployment as normal
+            - ./atlas micros service deploy -s ep-tool -f service-descriptor.json -e $BITBUCKET_DEPLOYMENT_ENVIRONMENT
           services:
             - docker
           caches:
             - docker
       - step:
           name: Deploy to prod
-          deployment: production
+          deployment: prod-east
           trigger: manual
           script:
             # set up step variables and auth data
@@ -66,17 +75,17 @@ pipelines:
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
-            # download micros CLI
-            - curl -O -H "Authorization:$PIPELINES_JWT_TOKEN" https://micros-proxy.services.atlassian.com/micros-stable/micros.tar.gz
-            - tar -xvf micros.tar.gz --transform s/micros/micros-cli/
-            - chmod +x micros-cli
+            # Download and extract Atlas CLI
+            - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
+            # Install the Micros plugin
+            - ./atlas plugin install -n micros
             # generate the service descriptor
             - echo "RELEASE_VERSION" > "template-vars.csv"
             - echo "${BITBUCKET_BUILD_NUMBER}" >> "template-vars.csv"
             - npm install mustang
             - $(npm bin)/mustang -t "service-descriptor.template.json" -i "template-vars.csv" > "service-descriptor.json"
-            # micros deploy the service
-            - ./micros-cli service:deploy ep-tool -f service-descriptor.json -e prod-east
+            # Lastly, run the deployment as normal
+            - ./atlas micros service deploy -s ep-tool -f service-descriptor.json -e $BITBUCKET_DEPLOYMENT_ENVIRONMENT
           services:
             - docker
           caches:
