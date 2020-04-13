@@ -24,7 +24,7 @@ pipelines:
           script:
             # set up step variables and auth data
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
-            - docker login -u=sox -p=$PIPELINES_JWT_TOKEN docker-proxy.services.atlassian.com
+            - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
             # build base image (node@alpine + python dependencies + hugo)
             - docker build --tag="${DOCKER_URL}/sox/atlassian/ep-tool:${BITBUCKET_BUILD_NUMBER}" .
             - docker push "${DOCKER_URL}/sox/atlassian/ep-tool:${BITBUCKET_BUILD_NUMBER}"
@@ -40,7 +40,7 @@ pipelines:
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
-            - docker login -u=sox -p=$PIPELINES_JWT_TOKEN docker-proxy.services.atlassian.com
+            - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
             # download micros CLI
             - curl -O -H "Authorization:$PIPELINES_JWT_TOKEN" https://micros-proxy.services.atlassian.com/micros-stable/micros.tar.gz
             - tar -xvf micros.tar.gz --transform s/micros/micros-cli/
@@ -65,7 +65,7 @@ pipelines:
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
-            - docker login -u=sox -p=$PIPELINES_JWT_TOKEN docker-proxy.services.atlassian.com
+            - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
             # download micros CLI
             - curl -O -H "Authorization:$PIPELINES_JWT_TOKEN" https://micros-proxy.services.atlassian.com/micros-stable/micros.tar.gz
             - tar -xvf micros.tar.gz --transform s/micros/micros-cli/
