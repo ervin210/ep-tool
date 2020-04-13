@@ -12,7 +12,7 @@ define(['../helpers/PageContext', '../host/addon', '../host/user'], function(PC,
       cache: true
    });
 
-   $.getScript(pageContext.productBaseUrl + '/atlassian-connect/all.js', function() {
+   $.getScript('https://connect-cdn.atl-paas.net/all.js', function() {
       AP.resize();
 
       descriptorRequest.done(function(descriptor) {
@@ -24,7 +24,7 @@ define(['../helpers/PageContext', '../host/addon', '../host/user'], function(PC,
 
          var enabledForAllCheckbox = AJS.$("#enabledForAll");
          var enabledForMeCheckbox = AJS.$("#enabledForMe");
-         
+
          globalPropertyRequest.done(function(property) {
             console.log(property);
             enabledForAllCheckbox.prop('checked', !property.value);
@@ -53,7 +53,7 @@ define(['../helpers/PageContext', '../host/addon', '../host/user'], function(PC,
 
          // TODO load the global settings
          // TODO load the per user settings
-         
+
          // Ensure that we show all content
       });
    });
