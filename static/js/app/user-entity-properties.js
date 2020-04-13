@@ -2,7 +2,7 @@ define(['../helpers/MustacheLoader', '../host/user', '../helpers/PageContext', '
    function isBlank(str) {
       return (!str || /^\s*$/.test(str));
    }
-   
+
    var pageContext = PC.load();
 
    ace.config.set('themePath', '/static/ace/themes');
@@ -58,7 +58,7 @@ define(['../helpers/MustacheLoader', '../host/user', '../helpers/PageContext', '
       AP.resize();
    };
 
-   $.getScript(pageContext.productBaseUrl + '/atlassian-connect/all.js', function() {
+   $.getScript('https://connect-cdn.atl-paas.net/all.js', function() {
       // your calls to AP here
       var templates = ML.load();
 
@@ -243,7 +243,7 @@ define(['../helpers/MustacheLoader', '../host/user', '../helpers/PageContext', '
             if(isValidJson(propertyValue)) {
                // Send the post to the rest resource
                var request = User.setProperty(currentUserKey, propertyKey, JSON.parse(propertyValue));
-               
+
                request.done(function() {
                   // Show a message saying that the save succeeded
                   AP.require("messages", function(messages){
