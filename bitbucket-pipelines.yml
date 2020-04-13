@@ -21,10 +21,6 @@ pipelines:
     master:
       - step:
           name: Build docker image
-          image:
-            name: node:10
-            username: rmassaioli
-            password: $PIPELINES_JWT_TOKEN
           script:
             # set up step variables and auth data
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
@@ -39,10 +35,6 @@ pipelines:
       - step:
           name: Deploy to staging
           deployment: staging
-          image:
-            name: node:10
-            username: rmassaioli
-            password: $PIPELINES_JWT_TOKEN
           script:
             # set up step variables and auth data
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
@@ -67,10 +59,6 @@ pipelines:
       - step:
           name: Deploy to prod
           deployment: production
-          image:
-            name: node:10
-            username: rmassaioli
-            password: $PIPELINES_JWT_TOKEN
           trigger: manual
           script:
             # set up step variables and auth data
