@@ -40,7 +40,7 @@
    },
    "links": {
       "binary": {
-         "name": "docker.atl-paas.net/atlassian/ep-tool",
+         "name": "docker.atl-paas.net/sox/atlassian/ep-tool",
          "type": "docker",
          "tag": "{{RELEASE_VERSION}}"
       },
