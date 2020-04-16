@@ -14,14 +14,14 @@
       "dev": {
          "config": {
             "environmentVariables": {
-               "HOST_URL": "https://cloud-code-macro.dev.services.atlassian.com"
+               "HOST_URL": "https://ep-tool.dev.services.atlassian.com"
             }
          }
       },
       "prod": {
          "config": {
             "environmentVariables": {
-               "HOST_URL": "https://cloud-code-macro.services.atlassian.com"
+               "HOST_URL": "https://ep-tool.services.atlassian.com"
             }
          }
       }
