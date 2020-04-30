@@ -6,7 +6,7 @@
       "dataType": [
          "None"
       ]
-   }
+   },
    "network": {
       "egress":  "internet-only"
    },
