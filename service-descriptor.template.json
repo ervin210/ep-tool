@@ -2,6 +2,11 @@
 {
    "name": "Entity Property Tool",
    "description": "Atlassian Connect addon for browsing entity properties in JIRA",
+   "computeClassification": {
+      "dataType": [
+         "Atlassian/Static"
+      ]
+   },
    "network": {
       "egress":  "internet-only"
    },
