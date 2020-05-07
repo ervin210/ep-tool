@@ -5,8 +5,19 @@ var app = express();
 var mustacheExpress = require('mustache-express');
 
 // JSON Logging
-app.use(bunyan());
-app.use(bunyan.errorLogger());
+var obfuscate = [
+    'req.headers.cookie',
+    'req.headers.referer',
+    'referer',
+    'msg'
+];
+
+app.use(bunyan({
+   obfuscate: obfuscate
+}));
+app.use(bunyan.errorLogger({
+   obfuscate: obfuscate
+}));
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
