@@ -17,7 +17,7 @@
          "ip_whitelist": [
            "public"
          ]
-       }
+      }
    }],
    "environmentOverrides": {
       "dev": {
