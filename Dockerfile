@@ -13,4 +13,5 @@ COPY --from=base /service /service
 ENV PORT 8080
 EXPOSE 8080
 
-CMD ["/service/main.js"]
+WORKDIR /service
+CMD ["main.js"]
