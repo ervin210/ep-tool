@@ -12,7 +12,12 @@
    },
    "resources": [{
       "type": "globaledge",
-      "name": "ingress"
+      "name": "ingress",
+      "attributes": {
+         "ip_whitelist": [
+           "public"
+         ]
+       }
    }],
    "environmentOverrides": {
       "dev": {
