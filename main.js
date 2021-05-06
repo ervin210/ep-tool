@@ -1,5 +1,5 @@
 var express = require('express');
-var bunyan = require('express-bunyan-logger');
+var ExpressPinoLogger = require('express-pino-logger');
 var app = express();
 
 var mustacheExpress = require('mustache-express');
@@ -12,12 +12,11 @@ var obfuscate = [
     'msg'
 ];
 
-app.use(bunyan({
-   obfuscate: obfuscate
-}));
-app.use(bunyan.errorLogger({
-   obfuscate: obfuscate
-}));
+const pino = ExpressPinoLogger({
+   redact: obfuscate
+});
+
+app.use(pino);
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
@@ -74,7 +73,7 @@ var getKeySuffixFromZone = function(zone) {
 var microsZone = zoneFromString(process.env.MICROS_ENVTYPE);
 
 app.get('/', function (req, res) {
-   res.send('TODO this should link to the docs pages');
+   res.redirect('/jira/atlassian-connect.json');
 });
 
 app.get('/jira/atlassian-connect.json', function(req, res) {

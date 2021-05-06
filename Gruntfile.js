@@ -83,7 +83,7 @@ module.exports = function(grunt) {
       },
       watch: {
          express: {
-            files: [ 
+            files: [
                'Gruntfile.js',
                'main.js',
                'views/*.mustache'
@@ -94,9 +94,9 @@ module.exports = function(grunt) {
             }
          },
          requirejs: {
-            files: [ 
+            files: [
                'Gruntfile.js',
-               'static/js/**/*.js' 
+               'static/js/**/*.js'
             ],
             tasks: [ 'requirejs:compile' ]
          },
