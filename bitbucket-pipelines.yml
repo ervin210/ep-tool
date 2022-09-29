@@ -31,6 +31,11 @@ pipelines:
       - step:
           name: Build docker image
           script:
+            # Used for accessing packages.atlassian.com
+            - pipe: docker://atlassian/artifactory-sidekick:latest
+              variables:
+                COMPLIANT: "true"
+            - source .artifactory/activate.sh
             # set up step variables and auth data
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
