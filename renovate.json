@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Ecosystem OneCloud",
+  "timezone": "Australia/Sydney",
+  "extends": [
+    "config:base"
+  ],
+  "bbUseDefaultReviewers": false,
+  "reviewers": [
+    "jniu",
+    "coneill",
+    "jhazelwood",
+    "vbhargava",
+    "sgupta18",
+    "anguyen",
+    "ssakpal"
+  ],
+  "enabledManagers": [
+    "npm",
+    "nvm",
+    "dockerfile",
+    "docker-compose",
+    "maven",
+    "pip_requirements"
+  ],
+  "stabilityDays": 1,
+  "rangeStrategy": "bump",
+  "prConcurrentLimit": 5,
+  "prCreation": "status-success",
+  "dependencyDashboard": true,
+  "prHourlyLimit": 2,
+  "prBodyNotes": [
+    "Have a look at your [dependency dashboard](https://statlas.prod.atl-paas.net/renovate-dashboards/{{repository}}.html)"
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "commitMessagePrefix": "[Renovate] "
+}
