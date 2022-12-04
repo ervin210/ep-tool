@@ -6,7 +6,7 @@ WORKDIR /service
 RUN ["npm", "install"]
 RUN ["npm", "run", "build"]
 
-FROM docker.atl-paas.net/golden-images/node:14-alpine
+FROM gcr.io/distroless/nodejs14-debian11
 
 COPY --from=base /service /service
 
