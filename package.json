@@ -6,7 +6,8 @@
   "scripts": {
     "build-dev": "grunt requirejs:compile less:compile",
     "build": "grunt requirejs:prod less:prod",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "jest --forceExit --coverage"
   },
   "keywords": [
     "atlassian",
@@ -24,8 +25,10 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.5.1",
     "husky": "^6.0.0",
+    "jest": "^29.5.0",
     "jira-prepare-commit-msg": "^1.5.2",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "express": "^4.17.3",
