@@ -1,4 +1,4 @@
-FROM node:14-slim as base
+FROM node:18-slim as base
 
 # Adding in the required files
 ADD . /service
@@ -10,12 +10,9 @@ RUN ["npm", "run", "build"]
 # https://community.atlassian.com/t5/Bitbucket-articles/Changes-to-make-your-containers-more-secure-on-Bitbucket/ba-p/998464#M89
 RUN chown -R root:root /service
 
-FROM docker.atl-paas.net/sox/micros-node-14:1.0.1
+FROM docker.atl-paas.net/sox/micros-node-18:1.0.4
 
-COPY --from=base /service /service
+COPY --from=base /service /opt/service
 
 ENV PORT 8080
 EXPOSE 8080
-
-WORKDIR /service
-CMD ["main.js"]

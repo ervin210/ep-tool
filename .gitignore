@@ -18,3 +18,4 @@
 
 # Generated files
 /service-descriptor.json
+coverage/
