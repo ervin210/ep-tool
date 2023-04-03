@@ -77,7 +77,7 @@ module.exports = function(grunt) {
       express: {
          dev: {
             options: {
-               script: 'main.js'
+               script: 'index.js'
             }
          }
       },
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
          express: {
             files: [
                'Gruntfile.js',
-               'main.js',
+               'index.js',
                'views/*.mustache'
             ],
             tasks: [ 'express:dev' ],

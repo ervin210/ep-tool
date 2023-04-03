@@ -2,7 +2,7 @@
   "name": "ep-tool",
   "version": "1.0.0",
   "description": "An Atlassian Connect addon that allows any user to manipulate entity and add-on properties in JIRA.",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "build-dev": "grunt requirejs:compile less:compile",
     "build": "grunt requirejs:prod less:prod",
