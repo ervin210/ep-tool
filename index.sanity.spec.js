@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./main');
+const app = require('./index');
 
 describe('Integration test for Express app', () => {
   it('should return a 302 status code for GET /', async () => {
