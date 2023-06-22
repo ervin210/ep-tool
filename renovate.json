@@ -1,26 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Ecosystem OneCloud",
-  "timezone": "Australia/Sydney",
   "extends": [
-    "config:base"
+    "local>atlassian/renovate-connect-ktlo"
   ],
-  "bbUseDefaultReviewers": true,
   "enabledManagers": [
     "npm",
+    "nvm",
     "dockerfile"
   ],
-  "stabilityDays": 1,
-  "rangeStrategy": "bump",
-  "prConcurrentLimit": 5,
-  "prCreation": "status-success",
-  "dependencyDashboard": true,
-  "prHourlyLimit": 2,
-  "prBodyNotes": [
-    "Have a look at your [dependency dashboard](https://statlas.prod.atl-paas.net/renovate-dashboards/{{repository}}.html)"
-  ],
-  "rebaseWhen": "behind-base-branch",
-  "commitMessagePrefix": "[Renovate] ",
   "packageRules": [
     {
       "matchCurrentVersion": ">=1.0.0",
