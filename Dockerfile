@@ -10,7 +10,7 @@ RUN ["npm", "run", "build"]
 # https://community.atlassian.com/t5/Bitbucket-articles/Changes-to-make-your-containers-more-secure-on-Bitbucket/ba-p/998464#M89
 RUN chown -R root:root /service
 
-FROM docker.atl-paas.net/sox/micros-node-18:1.0.9
+FROM docker.atl-paas.net/sox/micros-node-18:1.0.11
 
 COPY --from=base /service /opt/service
 
