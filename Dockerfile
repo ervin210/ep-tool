@@ -1,4 +1,4 @@
-FROM node:18-slim as base
+FROM node:21-slim as base
 
 # Adding in the required files
 ADD . /service
