@@ -2,20 +2,8 @@
 .*.sw[a-p]
 *~
 
-# AMPS
-/amps-standalone
-
 # Node / NPM
 /node_modules
 
 # Compiled files
-/static-js
-/static-css
-/target
-/.npm
-/jira-run-pom.xml
 .DS_Store
-
-# Generated files
-/service-descriptor.json
-coverage/
