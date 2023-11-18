@@ -1,0 +1,112 @@
+app:
+  id: ari:cloud:ecosystem::app/1c0636dd-b020-48a5-b68b-0d3f2fe06134
+  connect:
+    key: com.atlassian.connect.entity-property-tool.prod
+    remote: connect
+remotes:
+  - key: connect
+    baseUrl: https://ep-tool.services.atlassian.com
+connectModules:
+  jira:configurePage:
+    - url: /page/configuration
+      icon:
+        width: 80
+        height: 80
+        url: /maps/icon.png
+      key: configuration-page
+      name:
+        value: Entity property tool configuration
+  jira:jiraIssueTabPanels:
+    - url: /panel/issue?issue_id={issue.id}&issue_key={issue.key}
+      weight: 100
+      key: issue-entity-tab
+      name:
+        value: Entity properties
+      conditions:
+        - condition: user_is_logged_in
+        - or:
+            - condition: entity_property_equal_to
+              invert: true
+              params:
+                entity: addon
+                propertyKey: ep-tool.disabled-for-all
+                value: 'true'
+            - condition: entity_property_equal_to
+              params:
+                entity: user
+                propertyKey: ep-tool.enabled-for-me
+                value: 'true'
+  jira:jiraProjectPages:
+    - key: project-entity-properties-general-page
+      name:
+        value: Entity properties
+      url: /panel/project?project_id={project.id}&project_key={project.key}
+      weight: 1000
+      tooltip:
+        value: Project entity properties browser
+      iconUrl: /static/images/entity-properties-icon.svg
+      conditions:
+        - condition: user_is_logged_in
+        - or:
+            - condition: entity_property_equal_to
+              invert: true
+              params:
+                entity: addon
+                propertyKey: ep-tool.disabled-for-all
+                value: 'true'
+            - condition: entity_property_equal_to
+              params:
+                entity: user
+                propertyKey: ep-tool.enabled-for-me
+                value: 'true'
+  jira:generalPages:
+    - key: user-entity-properties-general-page
+      name:
+        value: User entity properties
+      url: /panel/user
+      location: not-a-valid-location
+    - key: issue-type-entity-properties-general-page
+      name:
+        value: Issue type entity properties
+      url: /panel/issue-type
+      location: not-a-valid-location
+  jira:webItems:
+    - key: issue-type-entitiy-properties-web-item
+      name:
+        value: Entity properties
+      url: issue-type-entity-properties-general-page
+      location: element_options_section/issue_types_section
+      weight: 1000
+      tooltip:
+        value: Entity properties browser for issue types
+      context: page
+      conditions:
+        - condition: user_is_logged_in
+        - or:
+            - condition: entity_property_equal_to
+              invert: true
+              params:
+                entity: addon
+                propertyKey: ep-tool.disabled-for-all
+                value: 'true'
+            - condition: entity_property_equal_to
+              params:
+                entity: user
+                propertyKey: ep-tool.enabled-for-me
+                value: 'true'
+    - key: user-entitiy-properties-web-item
+      name:
+        value: Entity properties
+      url: user-entity-properties-general-page
+      location: system.user.options/personal
+      weight: 1000
+      tooltip:
+        value: Entity properties browser for you
+      context: page
+permissions:
+  scopes:
+    - read:connect-jira
+    - write:connect-jira
+    - delete:connect-jira
+    - project-admin:connect-jira
+    - admin:connect-jira
