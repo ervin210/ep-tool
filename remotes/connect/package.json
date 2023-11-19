@@ -6,7 +6,6 @@
   "scripts": {
     "build-dev": "grunt requirejs:compile less:compile",
     "build": "grunt requirejs:prod less:prod",
-    "prepare": "husky install",
     "test": "jest --forceExit --coverage"
   },
   "keywords": [
@@ -24,7 +23,6 @@
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-express-server": "^0.5.4",
-    "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jira-prepare-commit-msg": "^1.7.2",
     "lodash": "^4.17.21",

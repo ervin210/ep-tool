@@ -6,6 +6,18 @@ app:
 remotes:
   - key: connect
     baseUrl: https://ep-tool.services.atlassian.com
+jira:globalPage:
+    - key: test-custom-ui-app-hello-world-page
+      resource: main
+      resolver:
+        function: resolver
+      title: Test Custom UI App
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: static/hello-world/build
 connectModules:
   jira:configurePage:
     - url: /page/configuration
