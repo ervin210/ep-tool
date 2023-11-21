@@ -4,7 +4,10 @@
   "description": "An Atlassian Connect addon that allows any user to manipulate entity and add-on properties in JIRA.",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build-static": "cd static/hello-world && npm run build",
+    "deploy-dev": "forge deploy",
+    "deploy": "run-s build-static deploy-dev"
   },
   "keywords": [
     "atlassian",
@@ -13,9 +16,10 @@
   "author": "Robert Massaioli",
   "license": "MIT",
   "devDependencies": {
-    "husky": "^8.0.3",
     "eslint": "^8.52.0",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
     "@forge/resolver": "1.5.21"

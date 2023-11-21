@@ -1,23 +1,31 @@
 app:
   id: ari:cloud:ecosystem::app/1c0636dd-b020-48a5-b68b-0d3f2fe06134
   connect:
-    key: com.atlassian.connect.entity-property-tool.prod
+    key: com.not-atlassian.connect.entity-property-tool.dev
     remote: connect
+  features:
+    autoUserConsent: true
+  runtime:
+    name: nodejs18.x
 remotes:
   - key: connect
-    baseUrl: https://ep-tool.services.atlassian.com
-jira:globalPage:
-    - key: test-custom-ui-app-hello-world-page
-      resource: main
-      resolver:
-        function: resolver
-      title: Test Custom UI App
+    baseUrl: https://rmassaioli.public.atlastunnel.com
+modules:
+  jira:projectPage:
+      - key: test-custom-ui-app-hello-world-page
+        title: Entity properties
+        icon: resource:main;entity-properties-icon.svg
+        resource: main
+        resolver:
+          function: resolver
   function:
     - key: resolver
       handler: index.handler
 resources:
   - key: main
     path: static/hello-world/build
+    tunnel:
+      port: 3001
 connectModules:
   jira:configurePage:
     - url: /page/configuration
@@ -51,7 +59,7 @@ connectModules:
   jira:jiraProjectPages:
     - key: project-entity-properties-general-page
       name:
-        value: Entity properties
+        value: Entity properties (old)
       url: /panel/project?project_id={project.id}&project_key={project.key}
       weight: 1000
       tooltip:
@@ -122,3 +130,7 @@ permissions:
     - delete:connect-jira
     - project-admin:connect-jira
     - admin:connect-jira
+    - read:jira-work
+  content:
+    styles:
+      - unsafe-inline
