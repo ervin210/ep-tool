@@ -131,6 +131,7 @@ permissions:
     - project-admin:connect-jira
     - admin:connect-jira
     - read:jira-work
+    - manage:jira-project
   content:
     styles:
       - unsafe-inline

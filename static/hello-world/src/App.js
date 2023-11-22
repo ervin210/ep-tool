@@ -1,82 +1,94 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useState } from 'react';
 import { invoke, requestJira, view } from '@forge/bridge';
-import AceEditor from "react-ace";
 import { useEffectAsync } from './useEffectAsync';
 import { isPresent } from 'ts-is-present';
+import { Property } from './Property';
 
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 
-async function getPropertyKeys(projectId) {
+const ProjectPropertyApi = {
+  getPropertyKeys: async (projectId) => {
     const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties`);
+    if (!propertiesResponse.ok) {
+      throw new Error('Did not perform operation successfully');
+    }
     const propertyPayload = await propertiesResponse.json();
     return propertyPayload.keys.map(p => p.key);
-}
-
-async function getProperty(projectId, propertyKey) {
+  },
+  getProperty: async (projectId, propertyKey) => {
     const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`);
-    return await propertiesResponse.json();
-}
-
-const Property = (props) => {
-    const [property, setProperty] = useState(undefined);
-
-    useEffectAsync(async () => {
-        setProperty(await getProperty(props.projectId, props.propertyKey));
-    }, property);
-
-    if (!isPresent(property)) {
-        return (
-            <div>
-                <h2>{props.propertyKey}</h2>
-                <div>Loading...</div>
-            </div>
-        );
+    if (!propertiesResponse.ok) {
+      throw new Error('Did not perform operation successfully');
     }
-
-    return (
-        <div>
-            <h2>{props.propertyKey}</h2>
-            <AceEditor
-                width='100%'
-                height='200px'
-                mode="json"
-                theme="monokai"
-                name="UNIQUE_ID_OF_DIV"
-                editorProps={{ $blockScrolling: true }}
-                defaultValue={JSON.stringify(property.value, null, 2)}
-            />
-        </div>
-    );
+    return await propertiesResponse.json();
+  },
+  setProperty: async (projectId, propertyKey, data) => {
+    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': "application/json"
+      }
+    });
+    if (!propertiesResponse.ok) {
+      throw new Error('Did not perform operation successfully');
+    }
+  },
+  deleteProperty: async (projectId, propertyKey) => {
+    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': "application/json"
+      }
+    });
+    if (!propertiesResponse.ok) {
+      throw new Error('Did not perform operation successfully');
+    }
+  }
 }
 
 function App() {
-    const [entityPropertyState, setEntityPropertyState] = useState(undefined);
+  const propertyApi = ProjectPropertyApi;
+  const [entityPropertyState, setEntityPropertyState] = useState(undefined);
 
-    useEffectAsync(async () => {
-        const context = await view.getContext();
-        const projectId = context.extension.project.id;
-        setEntityPropertyState({
-            projectId,
-            keys: await getPropertyKeys(projectId)
-        });
-    }, entityPropertyState);
-    // const [data, setData] = useState(null);
+  async function loadEntityPropertyState() {
+    const context = await view.getContext();
+    const projectId = context.extension.project.id;
+    return {
+      projectId,
+      keys: await propertyApi.getPropertyKeys(projectId)
+    };
+  }
 
-    // useEffect(() => {
-    //     invoke('getText', { example: 'my-invoke-variable' }).then(setData);
-    // }, []);
+  useEffectAsync(async () => {
+    setEntityPropertyState(await loadEntityPropertyState());
+  }, entityPropertyState);
 
-    return (
-        <div>
-            {/* {data ? data : 'Loading...'} */}
-            <div>{JSON.stringify(entityPropertyState, null, 2)}</div>
-            {isPresent(entityPropertyState) && entityPropertyState.keys.map(key => (
-                <Property projectId={entityPropertyState.projectId} propertyKey={key} />
-            ))}
-        </div>
-    );
+  async function onDelete(propertyKey) {
+    await propertyApi.deleteProperty(entityPropertyState.projectId, propertyKey);
+    setEntityPropertyState(await loadEntityPropertyState());
+  }
+
+  return (
+    <div>
+      <p>These are the entity properties for this project.</p>
+      {!isPresent(entityPropertyState) && (
+        <div>Loading the properties for this project...</div>
+      )}
+      {isPresent(entityPropertyState) && entityPropertyState.keys.map(key => (
+        <Property
+          key={`${key}`}
+          projectId={entityPropertyState.projectId}
+          propertyKey={key}
+          propertyApi={propertyApi}
+          onDelete={() => onDelete(key)}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default App;

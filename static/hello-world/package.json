@@ -4,21 +4,30 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@atlaskit/button": "^16.17.1",
     "@atlaskit/css-reset": "^6.6.1",
+    "@atlaskit/icon": "^22.0.0",
+    "@atlaskit/lozenge": "^11.4.6",
+    "@atlaskit/theme": "^12.6.2",
     "@forge/bridge": "3.0.0",
     "ace-builds": "^1.31.2",
     "react": "^16.13.1",
     "react-ace": "^10.1.0",
     "react-dom": "^16.13.1",
+    "styled-components": "^6.1.1",
+    "throttle-debounce": "^5.0.0",
     "ts-is-present": "^1.2.2"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=3001 react-scripts start",
+    "start": "BROWSER=none HOST=::1 PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
+  },
+  "resolutions": {
+    "styled-components": "^6"
   },
   "browserslist": {
     "production": [
