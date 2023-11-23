@@ -6,14 +6,18 @@
   "dependencies": {
     "@atlaskit/button": "^16.17.1",
     "@atlaskit/css-reset": "^6.6.1",
+    "@atlaskit/form": "^9.0.1",
     "@atlaskit/icon": "^22.0.0",
     "@atlaskit/lozenge": "^11.4.6",
+    "@atlaskit/modal-dialog": "^12.8.5",
+    "@atlaskit/textfield": "^6.0.0",
     "@atlaskit/theme": "^12.6.2",
     "@forge/bridge": "3.0.0",
     "ace-builds": "^1.31.2",
     "react": "^16.13.1",
     "react-ace": "^10.1.0",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^6.19.0",
     "styled-components": "^6.1.1",
     "throttle-debounce": "^5.0.0",
     "ts-is-present": "^1.2.2"

@@ -41,103 +41,103 @@ const UpdateSucceeded = 'saved';
 const UpdateFailed = 'update-failed';
 
 export const Property = (props) => {
-    const { projectId, propertyKey, propertyApi } = props;
-    const [property, setProperty] = useState(undefined);
-    const [validation, setValidation] = useState(undefined);
+  const { projectId, propertyKey, propertyApi } = props;
+  const [property, setProperty] = useState(undefined);
+  const [validation, setValidation] = useState(undefined);
 
-    useEffectAsync(async () => {
-        setProperty(await propertyApi.getProperty(projectId, propertyKey));
-    }, property);
+  useEffectAsync(async () => {
+    setProperty(await propertyApi.getProperty(projectId, propertyKey));
+  }, property);
 
-    if (!isPresent(property)) {
-        return (
-            <div>
-                <PropertyHeading>{propertyKey}</PropertyHeading>
-                <PropertyLoadingDiv>Loading...</PropertyLoadingDiv>
-            </div>
-        );
-    }
-
-    const onChangeDebounced = debounce(
-        500,
-        (event) => {
-            onChange(event);
-        },
-        { atBegin: false }
+  if (!isPresent(property)) {
+    return (
+      <div>
+        <PropertyHeading>{propertyKey}</PropertyHeading>
+        <PropertyLoadingDiv>Loading...</PropertyLoadingDiv>
+      </div>
     );
+  }
 
-    function updateValidationState(newState) {
-        if (isPresent(validation) && validation.changeId) {
-            clearTimeout(validation.changeId);
-        }
-        if (!isPresent(newState)) {
-            setValidation(undefined);
-        } else if (newState === ParseFailed) {
-            setValidation({
-                state: ParseFailed
-            });
-        } else if (newState === UpdateSucceeded) {
-            setValidation({
-                state: UpdateSucceeded,
-                changeId: setTimeout(() => setValidation(undefined), 3000)
-            });
-        } else if (newState === UpdateFailed) {
-          setValidation({
-            state: UpdateFailed
-          });
-        }
+  const onChangeDebounced = debounce(
+    500,
+    (event) => {
+      onChange(event);
+    },
+    { atBegin: false }
+  );
+
+  function updateValidationState(newState) {
+    if (isPresent(validation) && validation.changeId) {
+      clearTimeout(validation.changeId);
     }
+    if (!isPresent(newState)) {
+      setValidation(undefined);
+    } else if (newState === ParseFailed) {
+      setValidation({
+        state: ParseFailed
+      });
+    } else if (newState === UpdateSucceeded) {
+      setValidation({
+        state: UpdateSucceeded,
+        changeId: setTimeout(() => setValidation(undefined), 3000)
+      });
+    } else if (newState === UpdateFailed) {
+      setValidation({
+        state: UpdateFailed
+      });
+    }
+  }
 
-    async function onChange(e) {
-      let parsedContent = undefined;
+  async function onChange(e) {
+    let parsedContent = undefined;
+    try {
+      parsedContent = JSON.parse(e);
+      console.log(parsedContent);
+
       try {
-        parsedContent = JSON.parse(e);
-        console.log(parsedContent);
-
-        try {
-          await propertyApi.setProperty(projectId, propertyKey, parsedContent);
-          updateValidationState(UpdateSucceeded);
-          // TODO flash success
-        } catch (error) {
-            console.error(error);
-            updateValidationState(UpdateFailed);
-        }
+        await propertyApi.setProperty(projectId, propertyKey, parsedContent);
+        updateValidationState(UpdateSucceeded);
+        // TODO flash success
       } catch (error) {
         console.error(error);
-        updateValidationState(ParseFailed);
+        updateValidationState(UpdateFailed);
       }
+    } catch (error) {
+      console.error(error);
+      updateValidationState(ParseFailed);
     }
+  }
 
-    return (
-        <div>
-            <PropertyHeaderContainer>
-                <PropertyHeaderName>
-                    <PropertyHeading>
-                        {props.propertyKey}
-                    </PropertyHeading>
-                </PropertyHeaderName>
-                <PropertyHeaderStatus>
-                    {isPresent(validation) && validation.state === ParseFailed &&
-                        <Lozenge appearance="removed">Invalid - Unsaved</Lozenge>}
-                    {isPresent(validation) && validation.state === UpdateFailed &&
-                        <Lozenge appearance="removed">Failed to save</Lozenge>}
-                    {isPresent(validation) && validation.state === UpdateSucceeded &&
-                        <Lozenge appearance="success">Saved</Lozenge>}
-                </PropertyHeaderStatus>
-                <PropertyHeaderActions>
-                    <Button iconBefore={<EditorRemoveIcon />} onClick={() => props.onDelete(propertyKey)}>Delete</Button>
-                </PropertyHeaderActions>
-            </PropertyHeaderContainer>
-            <AceEditor
-                width='100%'
-                height='200px'
-                mode="json"
-                theme="monokai"
-                name={`property-${propertyKey}`}
-                editorProps={{ $blockScrolling: true }}
-                defaultValue={JSON.stringify(property.value, null, 2)}
-                onChange={(e) => onChangeDebounced(e)}
-            />
-        </div>
-    );
+  return (
+    <div>
+      <PropertyHeaderContainer>
+        <PropertyHeaderName>
+          <PropertyHeading>
+            {props.propertyKey}
+          </PropertyHeading>
+        </PropertyHeaderName>
+        <PropertyHeaderStatus>
+          {isPresent(validation) && validation.state === ParseFailed &&
+            <Lozenge appearance="removed">Invalid - Unsaved</Lozenge>}
+          {isPresent(validation) && validation.state === UpdateFailed &&
+            <Lozenge appearance="removed">Failed to save</Lozenge>}
+          {isPresent(validation) && validation.state === UpdateSucceeded &&
+            <Lozenge appearance="success">Saved</Lozenge>}
+        </PropertyHeaderStatus>
+        <PropertyHeaderActions>
+          <Button iconBefore={<EditorRemoveIcon />} onClick={() => props.onDelete(propertyKey)}>Delete</Button>
+        </PropertyHeaderActions>
+      </PropertyHeaderContainer>
+      <AceEditor
+        width='100%'
+        height='200px'
+        mode="json"
+        theme="monokai"
+        name={`property-${propertyKey}`}
+        editorProps={{ $blockScrolling: true }}
+        defaultValue={JSON.stringify(property.value, null, 2)}
+        onChange={(e) => onChangeDebounced(e)}
+      />
+    </div>
+  );
 }
