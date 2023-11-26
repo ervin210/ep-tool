@@ -41,12 +41,18 @@ const UpdateSucceeded = 'saved';
 const UpdateFailed = 'update-failed';
 
 export const Property = (props) => {
-  const { projectId, propertyKey, propertyApi } = props;
+  const { entityId, propertyKey, propertyApi } = props;
   const [property, setProperty] = useState(undefined);
   const [validation, setValidation] = useState(undefined);
 
   useEffectAsync(async () => {
-    setProperty(await propertyApi.getProperty(projectId, propertyKey));
+    try {
+      setProperty(await propertyApi.getProperty(entityId, propertyKey));
+    } catch (e) {
+      setProperty({
+        error: e
+      });
+    }
   }, property);
 
   if (!isPresent(property)) {
@@ -56,6 +62,18 @@ export const Property = (props) => {
         <PropertyLoadingDiv>Loading...</PropertyLoadingDiv>
       </div>
     );
+  }
+
+  if (property.error) {
+    return (
+      <div>
+        <PropertyHeading>{propertyKey}</PropertyHeading>
+        <PropertyLoadingDiv>
+          <p>Error loading the property! Disabling modification of this property.</p>
+          <p>{property.error.message}</p>
+        </PropertyLoadingDiv>
+      </div>
+    )
   }
 
   const onChangeDebounced = debounce(
@@ -95,7 +113,7 @@ export const Property = (props) => {
       console.log(parsedContent);
 
       try {
-        await propertyApi.setProperty(projectId, propertyKey, parsedContent);
+        await propertyApi.setProperty(entityId, propertyKey, parsedContent);
         updateValidationState(UpdateSucceeded);
         // TODO flash success
       } catch (error) {

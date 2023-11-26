@@ -11,13 +11,28 @@ remotes:
   - key: connect
     baseUrl: https://rmassaioli.public.atlastunnel.com
 modules:
+  ## TODO Use jira:adminPage for all other entity property types
+  jira:adminPage:
+    - key: user-entity-properties
+      title: User entity properties
+      icon: resource:main;entity-properties-icon.svg
+      resource: main
+      resolver:
+        function: resolver
   jira:projectPage:
-      - key: test-custom-ui-app-hello-world-page
-        title: Entity properties
-        icon: resource:main;entity-properties-icon.svg
-        resource: main
-        resolver:
-          function: resolver
+    - key: project-entity-properties
+      title: Entity properties
+      icon: resource:main;entity-properties-icon.svg
+      resource: main
+      resolver:
+        function: resolver
+  jira:issuePanel:
+    - key: issue-entity-properties
+      title: Entity properties
+      icon: resource:main;entity-properties-icon.svg
+      resource: main
+      resolver:
+        function: resolver
   function:
     - key: resolver
       handler: index.handler
@@ -131,6 +146,7 @@ permissions:
     - project-admin:connect-jira
     - admin:connect-jira
     - read:jira-work
+    - write:jira-work
     - manage:jira-project
   content:
     styles:

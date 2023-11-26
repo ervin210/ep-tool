@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { invoke, requestJira, view, Modal } from '@forge/bridge';
+import { view, Modal } from '@forge/bridge';
 import { useEffectAsync } from './useEffectAsync';
 import { isPresent } from 'ts-is-present';
 import { Property } from './Property';
@@ -8,58 +8,17 @@ import EditorAddIcon from '@atlaskit/icon/glyph/editor/add';
 import Button from '@atlaskit/button';
 import { TYPE_CREATE } from './AddPropertyModal';
 
-const ProjectPropertyApi = {
-  getPropertyKeys: async (projectId) => {
-    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties`);
-    if (!propertiesResponse.ok) {
-      throw new Error('Did not perform operation successfully');
-    }
-    const propertyPayload = await propertiesResponse.json();
-    return propertyPayload.keys.map(p => p.key);
-  },
-  getProperty: async (projectId, propertyKey) => {
-    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`);
-    if (!propertiesResponse.ok) {
-      throw new Error('Did not perform operation successfully');
-    }
-    return await propertiesResponse.json();
-  },
-  setProperty: async (projectId, propertyKey, data) => {
-    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-type': "application/json"
-      }
-    });
-    if (!propertiesResponse.ok) {
-      throw new Error('Did not perform operation successfully');
-    }
-  },
-  deleteProperty: async (projectId, propertyKey) => {
-    const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': "application/json"
-      }
-    });
-    if (!propertiesResponse.ok) {
-      throw new Error('Did not perform operation successfully');
-    }
-  }
-}
-
-function App() {
-  const propertyApi = ProjectPropertyApi;
+function App(props) {
+  const { propertyApi } = props;
   const [entityPropertyState, setEntityPropertyState] = useState(undefined);
 
   async function loadEntityPropertyState() {
     const context = await view.getContext();
     console.log('context', context);
-    const projectId = context.extension.project.id;
+    const entityId = propertyApi.extractEntityId(context);
     return {
-      projectId,
-      keys: await propertyApi.getPropertyKeys(projectId)
+      entityId,
+      keys: await propertyApi.getPropertyKeys(entityId)
     };
   }
 
@@ -68,7 +27,7 @@ function App() {
   }, entityPropertyState);
 
   async function onDelete(propertyKey) {
-    await propertyApi.deleteProperty(entityPropertyState.projectId, propertyKey);
+    await propertyApi.deleteProperty(entityPropertyState.entityId, propertyKey);
     setEntityPropertyState(await loadEntityPropertyState());
   }
 
@@ -77,7 +36,7 @@ function App() {
       const { propertyKey, propertyValue } = payload.data;
 
       // TODO what if this fails?
-      await propertyApi.setProperty(entityPropertyState.projectId, propertyKey, JSON.parse(propertyValue));
+      await propertyApi.setProperty(entityPropertyState.entityId, propertyKey, JSON.parse(propertyValue));
 
       setEntityPropertyState(await loadEntityPropertyState());
     }
@@ -103,7 +62,7 @@ function App() {
           {entityPropertyState.keys.map(key => (
             <Property
               key={`${key}`}
-              projectId={entityPropertyState.projectId}
+              entityId={entityPropertyState.entityId}
               propertyKey={key}
               propertyApi={propertyApi}
               onDelete={() => onDelete(key)}
