@@ -1,12 +1,12 @@
 import { requestJira } from '@forge/bridge';
 
-export function getUserPropertyApi(userId) {
+export function getUserPropertyApi(accountId) {
   return {
     extractEntityId: () => {
-      return userId;
+      return accountId;
     },
     getPropertyKeys: async (entityId) => {
-      const propertiesResponse = await requestJira(`/rest/api/3/project/${entityId}/properties`);
+      const propertiesResponse = await requestJira(`/rest/api/3/user/properties?accountId=${accountId}`);
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
@@ -14,14 +14,14 @@ export function getUserPropertyApi(userId) {
       return propertyPayload.keys.map(p => p.key);
     },
     getProperty: async (entityId, propertyKey) => {
-      const propertiesResponse = await requestJira(`/rest/api/3/project/${entityId}/properties/${encodeURIComponent(propertyKey)}`);
+      const propertiesResponse = await requestJira(`/rest/api/3/user/properties/${encodeURIComponent(propertyKey)}?accountId=${accountId}`);
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
       return await propertiesResponse.json();
     },
     setProperty: async (entityId, propertyKey, data) => {
-      const propertiesResponse = await requestJira(`/rest/api/3/project/${entityId}/properties/${encodeURIComponent(propertyKey)}`, {
+      const propertiesResponse = await requestJira(`/rest/api/3/user/properties/${encodeURIComponent(propertyKey)}?accountId=${accountId}`, {
         method: 'PUT',
         body: JSON.stringify(data),
         headers: {
@@ -33,7 +33,7 @@ export function getUserPropertyApi(userId) {
       }
     },
     deleteProperty: async (entityId, propertyKey) => {
-      const propertiesResponse = await requestJira(`/rest/api/3/project/${entityId}/properties/${encodeURIComponent(propertyKey)}`, {
+      const propertiesResponse = await requestJira(`/rest/api/3/user/properties/${encodeURIComponent(propertyKey)}?accountId=${accountId}`, {
         method: 'DELETE',
         headers: {
           'Content-type': "application/json"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AceEditor from "react-ace";
 import styled from 'styled-components';
 import { debounce } from 'throttle-debounce';
@@ -45,7 +45,7 @@ export const Property = (props) => {
   const [property, setProperty] = useState(undefined);
   const [validation, setValidation] = useState(undefined);
 
-  useEffectAsync(async () => {
+  async function loadProperty() {
     try {
       setProperty(await propertyApi.getProperty(entityId, propertyKey));
     } catch (e) {
@@ -53,7 +53,15 @@ export const Property = (props) => {
         error: e
       });
     }
+  }
+
+  useEffectAsync(async () => {
+    await loadProperty();
   }, property);
+
+  useEffect(() => {
+    loadProperty()
+  }, [propertyApi]);
 
   if (!isPresent(property)) {
     return (

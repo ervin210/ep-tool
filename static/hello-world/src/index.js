@@ -11,6 +11,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { ProjectPropertyApi } from './apis/project';
 import { IssuePropertyApi } from './apis/issue';
+import { UserSelector } from './UserSelector';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,7 +19,7 @@ ReactDOM.render(
       <Routes>
         <Route exact path='/module/project-entity-properties' element={<App propertyApi={ProjectPropertyApi} />} />
         <Route exact path='/module/issue-entity-properties' element={<App propertyApi={IssuePropertyApi} />} />
-        <Route exact path='/module/user-entity-properties' element={<App propertyApi={IssuePropertyApi} />} />
+        <Route exact path='/module/user-entity-properties' element={<UserSelector />} />
         <Route exact path='/module/project-entity-properties/modal/add-property' element={<AddPropertyModal />} />
         <Route exact path='/module/issue-entity-properties/modal/add-property' element={<AddPropertyModal />} />
         <Route exact path='/module/user-entity-properties/modal/add-property' element={<AddPropertyModal />} />

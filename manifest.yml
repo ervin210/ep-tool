@@ -148,6 +148,7 @@ permissions:
     - read:jira-work
     - write:jira-work
     - manage:jira-project
+    - read:jira-user
   content:
     styles:
       - unsafe-inline

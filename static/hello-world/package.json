@@ -10,6 +10,8 @@
     "@atlaskit/icon": "^22.0.0",
     "@atlaskit/lozenge": "^11.4.6",
     "@atlaskit/modal-dialog": "^12.8.5",
+    "@atlaskit/select": "^17.0.1",
+    "@atlaskit/spinner": "^16.0.0",
     "@atlaskit/textfield": "^6.0.0",
     "@atlaskit/theme": "^12.6.2",
     "@forge/bridge": "3.0.0",

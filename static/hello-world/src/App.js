@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { view, Modal } from '@forge/bridge';
 import { useEffectAsync } from './useEffectAsync';
 import { isPresent } from 'ts-is-present';
@@ -21,6 +21,10 @@ function App(props) {
       keys: await propertyApi.getPropertyKeys(entityId)
     };
   }
+
+  useEffect(() => {
+    loadEntityPropertyState().then(setEntityPropertyState);
+  }, [propertyApi]);
 
   useEffectAsync(async () => {
     setEntityPropertyState(await loadEntityPropertyState());
