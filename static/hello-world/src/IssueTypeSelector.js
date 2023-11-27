@@ -4,6 +4,8 @@ import Select from '@atlaskit/select';
 import { useEffectAsync } from './useEffectAsync';
 import { Label } from '@atlaskit/form';
 import { isPresent } from 'ts-is-present';
+import App from './App';
+import { getIssueTypeApi } from './apis/issue-type';
 
 async function getIssueTypes() {
   const allIssueTypesResponse = await requestJira(`/rest/api/3/issuetype`);
@@ -32,6 +34,8 @@ export function IssueTypeSelector() {
     });
   }, issueTypes);
 
+  const defaultOptions = isPresent(issueTypes) ? toIssueTypeOptions(issueTypes) : [];
+
   return (
     <>
       <Label htmlFor="indicators-loading">Which Issue Types entity properties do you wish to edit?</Label>
@@ -41,7 +45,8 @@ export function IssueTypeSelector() {
       {isPresent(issueTypes) && (
         <Select
           inputId="indicators-loading"
-          options={toIssueTypeOptions(issueTypes)}
+          defaultValue={defaultOptions[0]}
+          options={defaultOptions}
           onChange={(selectedOption) => {
             console.log('newAccountId', selectedOption);
             setCurrentState({
@@ -49,6 +54,9 @@ export function IssueTypeSelector() {
             });
           }}
         />
+      )}
+      {isPresent(currentState) && (
+        <App propertyApi={getIssueTypeApi(currentState.issueTypeId)} />
       )}
     </>
   );
