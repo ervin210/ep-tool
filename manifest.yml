@@ -12,13 +12,22 @@ remotes:
     baseUrl: https://rmassaioli.public.atlastunnel.com
 modules:
   ## TODO Use jira:adminPage for all other entity property types
-  jira:adminPage:
-    - key: user-entity-properties
-      title: User entity properties
+  jira:globalPage:
+    - key: entity-properties-global
+      title: Entity properties
       icon: resource:main;entity-properties-icon.svg
       resource: main
       resolver:
         function: resolver
+      pages:
+        - title: User entity properties
+          route: user
+        - title: Issue Type entity properties
+          route: issue-type
+        - title: Dashboard Item entity properties
+          route: dashboard-items
+        - title: Workflow Transition entity properties
+          route: workflow-transitions
   jira:projectPage:
     - key: project-entity-properties
       title: Entity properties

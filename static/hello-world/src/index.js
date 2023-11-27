@@ -12,19 +12,64 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import { ProjectPropertyApi } from './apis/project';
 import { IssuePropertyApi } from './apis/issue';
 import { UserSelector } from './UserSelector';
+import { IssueTypeSelector } from './IssueTypeSelector';
+import { SpaRouter } from './SpaRouter';
+import { ContextRoute } from './ContextRouter';
+import { ViewContext } from './ViewContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <CustomUiRouter>
+    <ViewContext>
+      <ContextRoute moduleKey="project-entity-properties">
+        <App propertyApi={ProjectPropertyApi} />
+        <ContextRoute modalType="add-property">
+          <AddPropertyModal />
+        </ContextRoute>
+      </ContextRoute>
+      <ContextRoute moduleKey="project-entity-properties">
+        <App propertyApi={ProjectPropertyApi} />
+        <ContextRoute modalType="add-property">
+          <AddPropertyModal />
+        </ContextRoute>
+      </ContextRoute>
+      <ContextRoute moduleKey="issue-entity-properties">
+        <App propertyApi={IssuePropertyApi} />
+        <ContextRoute modalType="add-property">
+          <AddPropertyModal />
+        </ContextRoute>
+      </ContextRoute>
+      <ContextRoute moduleKey="entity-properties-global">
+        <ContextRoute noModal>
+          <SpaRouter>
+            <Routes>
+                {/* TODO use an index route here? */}
+                <Route exact path='/' element={<p>TODO</p>} />
+                <Route exact path='/user' element={<UserSelector />} />
+                <Route exact path='/issue-type' element={<IssueTypeSelector />} />
+                <Route exact path='/dashboard-items' element={<p>TODO</p>} />
+                <Route exact path='/workflow-transitions' element={<p>TODO</p>} />
+                {/* TODO how do I setup the add-property modal? */}
+              </Routes>
+          </SpaRouter>
+        </ContextRoute>
+        <ContextRoute modalType="add-property">
+          <AddPropertyModal />
+        </ContextRoute>
+      </ContextRoute>
+
+    </ViewContext>
+    {/* <CustomUiRouter>
       <Routes>
         <Route exact path='/module/project-entity-properties' element={<App propertyApi={ProjectPropertyApi} />} />
         <Route exact path='/module/issue-entity-properties' element={<App propertyApi={IssuePropertyApi} />} />
         <Route exact path='/module/user-entity-properties' element={<UserSelector />} />
+        <Route exact path='/module/issue-type-entity-properties' element={<IssueTypeSelector />} />
         <Route exact path='/module/project-entity-properties/modal/add-property' element={<AddPropertyModal />} />
         <Route exact path='/module/issue-entity-properties/modal/add-property' element={<AddPropertyModal />} />
         <Route exact path='/module/user-entity-properties/modal/add-property' element={<AddPropertyModal />} />
+        <Route exact path='/module/issue-type-entity-properties/modal/add-property' element={<AddPropertyModal />} />
       </Routes>
-    </CustomUiRouter>
+    </CustomUiRouter> */}
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -7,6 +7,12 @@ import { Label } from '@atlaskit/form';
 import { isPresent } from 'ts-is-present';
 import { getUserPropertyApi } from './apis/user';
 import App from './App';
+import styled from 'styled-components';
+import { useViewContext } from './ViewContext';
+
+const AppContainer = styled.div`
+  margin-top: 16px;
+`;
 
 const LoadingIndicator = (props) => {
   return <Spinner {...props} />;
@@ -28,11 +34,12 @@ async function searchForUsers(searchQuery) {
   return await userSearchResponse.json();
 }
 
-function toLabel(user) {
+function toLabel(user, currentUserAccountId) {
   const displayName = isPresent(user.displayName) ? user.displayName : '<Name hidden>';
   const disambiguation = isPresent(user.email) ? user.email : user.accountId;
+  const youOrNot = currentUserAccountId === user.accountId ? ' [You]': '';
 
-  return `${displayName} (${disambiguation})`;
+  return `${displayName} (${disambiguation})${youOrNot}`;
 }
 
 /**
@@ -50,9 +57,9 @@ function toLabel(user) {
 export function UserSelector() {
   const [initialState, setInitialState] = useState(undefined);
   const [currentAaid, setCurrentAaid] = useState(undefined);
+  const context = useViewContext();
 
   useEffectAsync(async () => {
-    const context = await view.getContext();
     const userDetails = await getUser(context.accountId);
     setInitialState({
       accountId: context.accountId,
@@ -72,7 +79,7 @@ export function UserSelector() {
 
   function defaultOption() {
     return [{
-      label: initialState.displayName,
+      label: toLabel(initialState, initialState.accountId),
       value: initialState.accountId
     }];
   }
@@ -81,10 +88,12 @@ export function UserSelector() {
     const users = await searchForUsers(inputValue);
 
     return users.map(user => ({
-      label: toLabel(user),
+      label: toLabel(user, initialState.accountId),
       value: user.accountId
     }));
   }
+
+  const defaultOptions = defaultOption();
 
   return (
     <>
@@ -92,8 +101,8 @@ export function UserSelector() {
       <AsyncSelect
         inputId="indicators-loading"
         cacheOptions
-        defaultOptions={defaultOption()}
-        defaultValue={[initialState.accountId]}
+        defaultOptions
+        defaultValue={defaultOptions[0]}
         loadOptions={e => getUserOptions(e)}
         components={{ LoadingIndicator }}
         onChange={(selectedOption) => {
@@ -105,7 +114,9 @@ export function UserSelector() {
         }}
       />
       {isPresent(currentAaid) && (
-        <App propertyApi={currentAaid.propertyApi} />
+        <AppContainer>
+          <App propertyApi={currentAaid.propertyApi} />
+        </AppContainer>
       )}
     </>
   );

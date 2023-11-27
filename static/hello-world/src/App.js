@@ -7,14 +7,14 @@ import { Property } from './Property';
 import EditorAddIcon from '@atlaskit/icon/glyph/editor/add';
 import Button from '@atlaskit/button';
 import { TYPE_CREATE } from './AddPropertyModal';
+import { useViewContext } from './ViewContext';
 
 function App(props) {
   const { propertyApi } = props;
   const [entityPropertyState, setEntityPropertyState] = useState(undefined);
+  const context = useViewContext();
 
   async function loadEntityPropertyState() {
-    const context = await view.getContext();
-    console.log('context', context);
     const entityId = propertyApi.extractEntityId(context);
     return {
       entityId,
