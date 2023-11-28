@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, Routes } from 'react-router-dom';
 import App from './App';
-import { CustomUiRouter } from './CustomUiRouter';
 import { AddPropertyModal } from './AddPropertyModal';
 
 import '@atlaskit/css-reset';
@@ -18,6 +17,7 @@ import { ContextRoute } from './ContextRouter';
 import { ViewContext } from './ViewContext';
 import { DashboardSelector } from './DashboardSelector';
 import { WorkflowSelector } from './WorkflowSelector';
+import { EntityPropertyGlobalHome } from './EntityPropertyGlobalHome';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -43,7 +43,7 @@ ReactDOM.render(
           <SpaRouter>
             <Routes>
                 {/* TODO use an index route here? */}
-                <Route exact path='/' element={<p>TODO</p>} />
+                <Route exact path='/' element={<EntityPropertyGlobalHome />} />
                 <Route exact path='/user' element={<UserSelector />} />
                 <Route exact path='/issue-type' element={<IssueTypeSelector />} />
                 <Route exact path='/dashboard-items' element={<DashboardSelector />} />
