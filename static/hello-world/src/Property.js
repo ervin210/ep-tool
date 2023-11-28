@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import AceEditor from "react-ace";
+import AceEditor from 'react-ace';
 import styled from 'styled-components';
 import { debounce } from 'throttle-debounce';
-import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove'
+import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import Lozenge from '@atlaskit/lozenge';
 import Button from '@atlaskit/button';
 import { useEffectAsync } from './useEffectAsync';
@@ -45,7 +45,7 @@ export const Property = (props) => {
   const [property, setProperty] = useState(undefined);
   const [validation, setValidation] = useState(undefined);
 
-  async function loadProperty() {
+  async function loadProperty () {
     try {
       setProperty(await propertyApi.getProperty(entityId, propertyKey));
     } catch (e) {
@@ -60,7 +60,7 @@ export const Property = (props) => {
   }, property);
 
   useEffect(() => {
-    loadProperty()
+    loadProperty();
   }, [propertyApi]);
 
   if (!isPresent(property)) {
@@ -81,7 +81,7 @@ export const Property = (props) => {
           <p>{property.error.message}</p>
         </PropertyLoadingDiv>
       </div>
-    )
+    );
   }
 
   const onChangeDebounced = debounce(
@@ -92,7 +92,7 @@ export const Property = (props) => {
     { atBegin: false }
   );
 
-  function updateValidationState(newState) {
+  function updateValidationState (newState) {
     if (isPresent(validation) && validation.changeId) {
       clearTimeout(validation.changeId);
     }
@@ -114,8 +114,8 @@ export const Property = (props) => {
     }
   }
 
-  async function onChange(e) {
-    let parsedContent = undefined;
+  async function onChange (e) {
+    let parsedContent;
     try {
       parsedContent = JSON.parse(e);
       console.log(parsedContent);
@@ -144,11 +144,11 @@ export const Property = (props) => {
         </PropertyHeaderName>
         <PropertyHeaderStatus>
           {isPresent(validation) && validation.state === ParseFailed &&
-            <Lozenge appearance="removed">Invalid - Unsaved</Lozenge>}
+            <Lozenge appearance='removed'>Invalid - Unsaved</Lozenge>}
           {isPresent(validation) && validation.state === UpdateFailed &&
-            <Lozenge appearance="removed">Failed to save</Lozenge>}
+            <Lozenge appearance='removed'>Failed to save</Lozenge>}
           {isPresent(validation) && validation.state === UpdateSucceeded &&
-            <Lozenge appearance="success">Saved</Lozenge>}
+            <Lozenge appearance='success'>Saved</Lozenge>}
         </PropertyHeaderStatus>
         <PropertyHeaderActions>
           <Button iconBefore={<EditorRemoveIcon />} onClick={() => props.onDelete(propertyKey)}>Delete</Button>
@@ -156,22 +156,22 @@ export const Property = (props) => {
       </PropertyHeaderContainer>
       {!props.useText && (
         <AceEditor
-        width='100%'
-        height='200px'
-        mode="json"
-        theme="monokai"
-        name={`property-${propertyKey}`}
-        editorProps={{ $blockScrolling: true }}
-        defaultValue={JSON.stringify(property.value, null, 2)}
-        onChange={(e) => onChangeDebounced(e)}
-      />
+          width='100%'
+          height='200px'
+          mode='json'
+          theme='monokai'
+          name={`property-${propertyKey}`}
+          editorProps={{ $blockScrolling: true }}
+          defaultValue={JSON.stringify(property.value, null, 2)}
+          onChange={(e) => onChangeDebounced(e)}
+        />
       )}
       {!!props.useText && (
         <AceEditor
           width='100%'
           height='200px'
-          mode="text"
-          theme="monokai"
+          mode='text'
+          theme='monokai'
           name={`property-${propertyKey}`}
           editorProps={{ $blockScrolling: true }}
           defaultValue={property.value}
@@ -180,4 +180,4 @@ export const Property = (props) => {
       )}
     </div>
   );
-}
+};

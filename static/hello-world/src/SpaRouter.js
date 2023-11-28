@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { view } from "@forge/bridge";
-import { Router, Route, Routes, useNavigate, createHistory } from "react-router";
-import { createMemoryHistory } from "history";
+import React, { useEffect, useState } from 'react';
+import { view } from '@forge/bridge';
+import { Router, useNavigate } from 'react-router';
+import { createMemoryHistory } from 'history';
 import { isPresent } from 'ts-is-present';
-import { useViewContext } from "./ViewContext";
+import { useViewContext } from './ViewContext';
 
-function Link({ to, children }) {
+export function Link ({ to, children }) {
   const navigate = useNavigate();
   return (
     <a
@@ -20,7 +20,7 @@ function Link({ to, children }) {
   );
 }
 
-function convertContextToRoute(context) {
+function convertContextToRoute (context) {
   let url = `/module/${context.moduleKey}`;
 
   if (isPresent(context?.extension?.modal?.type)) {
@@ -31,7 +31,7 @@ function convertContextToRoute(context) {
   return url;
 }
 
-export function SpaRouter(props) {
+export function SpaRouter (props) {
   const [history, setHistory] = useState(null);
   const context = useViewContext();
 
@@ -40,7 +40,7 @@ export function SpaRouter(props) {
       setHistory(newHistory);
       console.log('created history', newHistory);
     }).catch(e => {
-      console.error(`view createHistory`, e);
+      console.error('view createHistory', e);
 
       // TODO in here we can default to our static routing sub-system
       setHistory(createMemoryHistory({
@@ -55,7 +55,7 @@ export function SpaRouter(props) {
     if (!historyState && history) {
       setHistoryState({
         action: history.action,
-        location: history.location,
+        location: history.location
       });
     }
   }, [history, historyState]);
@@ -65,7 +65,7 @@ export function SpaRouter(props) {
       history.listen((location, action) => {
         setHistoryState({
           action,
-          location,
+          location
         });
       });
     }
@@ -73,17 +73,19 @@ export function SpaRouter(props) {
 
   return (
     <div>
-      {history && historyState ? (
-        <Router
-          navigator={history}
-          navigationType={historyState.action}
-          location={historyState.location}
-        >
-          {props.children}
-        </Router>
-      ) : (
-        "Loading..."
-      )}
+      {history && historyState
+        ? (
+          <Router
+            navigator={history}
+            navigationType={historyState.action}
+            location={historyState.location}
+          >
+            {props.children}
+          </Router>
+          )
+        : (
+            'Loading...'
+          )}
     </div>
   );
 }

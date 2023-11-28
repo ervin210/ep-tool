@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { useEffectAsync } from "./useEffectAsync";
-import { view } from "@forge/bridge";
-import { isPresent } from "ts-is-present";
-import { useViewContext } from "./ViewContext";
+import React from 'react';
+import { isPresent } from 'ts-is-present';
+import { useViewContext } from './ViewContext';
 
 /*
 I want a class that can take a context object and route requests
@@ -22,13 +20,13 @@ interface Context {
   timezone: string;
 }
 */
-export function ContextRoute(props) {
+export function ContextRoute (props) {
   const context = useViewContext();
 
   console.log('context', context);
 
   if (!isPresent(context)) {
-    throw new Error(`You must use a ContextRoute within a ViewContext.`);
+    throw new Error('You must use a ContextRoute within a ViewContext.');
   }
 
   if (isPresent(props.moduleKey) && props.moduleKey !== context.moduleKey) {

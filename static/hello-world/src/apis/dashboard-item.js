@@ -1,6 +1,6 @@
 import { requestJira } from '@forge/bridge';
 
-export function getDashboardItemPropertyApi(dashboardId, dashboardItemId) {
+export function getDashboardItemPropertyApi (dashboardId, dashboardItemId) {
   return {
     extractEntityId: () => {
       return dashboardItemId;
@@ -25,7 +25,7 @@ export function getDashboardItemPropertyApi(dashboardId, dashboardItemId) {
         method: 'PUT',
         body: JSON.stringify(data),
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
@@ -36,12 +36,12 @@ export function getDashboardItemPropertyApi(dashboardId, dashboardItemId) {
       const propertiesResponse = await requestJira(`/rest/api/3/dashboard/${dashboardId}/items/${entityId}/properties/${encodeURIComponent(propertyKey)}`, {
         method: 'DELETE',
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
     }
-  }
+  };
 }

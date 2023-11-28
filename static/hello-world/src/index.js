@@ -5,9 +5,9 @@ import App from './App';
 import { AddPropertyModal } from './AddPropertyModal';
 
 import '@atlaskit/css-reset';
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
 import { ProjectPropertyApi } from './apis/project';
 import { IssuePropertyApi } from './apis/issue';
 import { UserSelector } from './UserSelector';
@@ -22,37 +22,37 @@ import { EntityPropertyGlobalHome } from './EntityPropertyGlobalHome';
 ReactDOM.render(
   <React.StrictMode>
     <ViewContext>
-      <ContextRoute moduleKey="project-entity-properties">
+      <ContextRoute moduleKey='project-entity-properties'>
         <ContextRoute noModal>
           <App propertyApi={ProjectPropertyApi} />
         </ContextRoute>
-        <ContextRoute modalType="add-property">
+        <ContextRoute modalType='add-property'>
           <AddPropertyModal />
         </ContextRoute>
       </ContextRoute>
-      <ContextRoute moduleKey="issue-entity-properties">
+      <ContextRoute moduleKey='issue-entity-properties'>
         <ContextRoute noModal>
           <App propertyApi={IssuePropertyApi} />
         </ContextRoute>
-        <ContextRoute modalType="add-property">
+        <ContextRoute modalType='add-property'>
           <AddPropertyModal />
         </ContextRoute>
       </ContextRoute>
-      <ContextRoute moduleKey="entity-properties-global">
+      <ContextRoute moduleKey='entity-properties-global'>
         <ContextRoute noModal>
           <SpaRouter>
             <Routes>
-                {/* TODO use an index route here? */}
-                <Route exact path='/' element={<EntityPropertyGlobalHome />} />
-                <Route exact path='/user' element={<UserSelector />} />
-                <Route exact path='/issue-type' element={<IssueTypeSelector />} />
-                <Route exact path='/dashboard-items' element={<DashboardSelector />} />
-                <Route exact path='/workflow-transitions' element={<WorkflowSelector />} />
-                {/* TODO how do I setup the add-property modal? */}
-              </Routes>
+              {/* TODO use an index route here? */}
+              <Route exact path='/' element={<EntityPropertyGlobalHome />} />
+              <Route exact path='/user' element={<UserSelector />} />
+              <Route exact path='/issue-type' element={<IssueTypeSelector />} />
+              <Route exact path='/dashboard-items' element={<DashboardSelector />} />
+              <Route exact path='/workflow-transitions' element={<WorkflowSelector />} />
+              {/* TODO how do I setup the add-property modal? */}
+            </Routes>
           </SpaRouter>
         </ContextRoute>
-        <ContextRoute modalType="add-property">
+        <ContextRoute modalType='add-property'>
           <AddPropertyModal />
         </ContextRoute>
       </ContextRoute>

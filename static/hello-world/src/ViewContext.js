@@ -1,15 +1,15 @@
-import React, {useContext, createContext, useState} from 'react';
+import React, { useContext, createContext, useState } from 'react';
 import { useEffectAsync } from './useEffectAsync';
 import { view } from '@forge/bridge';
 import { isPresent } from 'ts-is-present';
 
-const VC = createContext();
+const Context = createContext();
 
 export const useViewContext = () => {
-  return useContext(VC);
+  return useContext(Context);
 };
 
-export function ViewContext(props) {
+export function ViewContext (props) {
   const [context, setContext] = useState(undefined);
 
   useEffectAsync(async () => {
@@ -21,5 +21,5 @@ export function ViewContext(props) {
     return <></>;
   }
 
-  return <VC.Provider value={context}>{props.children}</VC.Provider>;
+  return <Context.Provider value={context}>{props.children}</Context.Provider>;
 }

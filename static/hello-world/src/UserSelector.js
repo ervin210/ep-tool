@@ -18,7 +18,7 @@ const LoadingIndicator = (props) => {
   return <Spinner {...props} />;
 };
 
-async function getUser(accountId) {
+async function getUser (accountId) {
   const getUserResponse = await requestJira(`/rest/api/3/user?accountId=${accountId}`);
   if (!getUserResponse.ok) {
     throw new Error('Did not perform operation successfully');
@@ -26,7 +26,7 @@ async function getUser(accountId) {
   return await getUserResponse.json();
 }
 
-async function searchForUsers(searchQuery) {
+async function searchForUsers (searchQuery) {
   const userSearchResponse = await requestJira(`/rest/api/3/user/search?query=${encodeURIComponent(searchQuery)}`);
   if (!userSearchResponse.ok) {
     throw new Error('Did not perform operation successfully');
@@ -34,10 +34,10 @@ async function searchForUsers(searchQuery) {
   return await userSearchResponse.json();
 }
 
-function toLabel(user, currentUserAccountId) {
+function toLabel (user, currentUserAccountId) {
   const displayName = isPresent(user.displayName) ? user.displayName : '<Name hidden>';
   const disambiguation = isPresent(user.email) ? user.email : user.accountId;
-  const youOrNot = currentUserAccountId === user.accountId ? ' [You]': '';
+  const youOrNot = currentUserAccountId === user.accountId ? ' [You]' : '';
 
   return `${displayName} (${disambiguation})${youOrNot}`;
 }
@@ -54,7 +54,7 @@ function toLabel(user, currentUserAccountId) {
  * We should also provide a "selector" experience to find other users and
  * attempt to view their properties.
  */
-export function UserSelector() {
+export function UserSelector () {
   const [initialState, setInitialState] = useState(undefined);
   const [currentAaid, setCurrentAaid] = useState(undefined);
   const context = useViewContext();
@@ -68,7 +68,7 @@ export function UserSelector() {
     setCurrentAaid({
       accountId: context.accountId,
       propertyApi: getUserPropertyApi(context.accountId)
-    })
+    });
   }, initialState);
 
   if (!isPresent(initialState)) {
@@ -77,14 +77,14 @@ export function UserSelector() {
     );
   }
 
-  function defaultOption() {
+  function defaultOption () {
     return [{
       label: toLabel(initialState, initialState.accountId),
       value: initialState.accountId
     }];
   }
 
-  async function getUserOptions(inputValue) {
+  async function getUserOptions (inputValue) {
     const users = await searchForUsers(inputValue);
 
     return users.map(user => ({
@@ -97,9 +97,9 @@ export function UserSelector() {
 
   return (
     <>
-      <Label htmlFor="indicators-loading">Which users entity properties do you wish to edit?</Label>
+      <Label htmlFor='indicators-loading'>Which users entity properties do you wish to edit?</Label>
       <AsyncSelect
-        inputId="indicators-loading"
+        inputId='indicators-loading'
         cacheOptions
         defaultOptions
         defaultValue={defaultOptions[0]}

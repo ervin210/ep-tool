@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { requestJira } from '@forge/bridge';
-import { useEffectAsync } from './useEffectAsync';
 import Select, { AsyncSelect } from '@atlaskit/select';
 import Spinner from '@atlaskit/spinner';
 import { Label } from '@atlaskit/form';
 import { isPresent } from 'ts-is-present';
-import { getUserPropertyApi } from './apis/user';
 import App from './App';
 import styled from 'styled-components';
-import { useViewContext } from './ViewContext';
 import { getDashboardItemPropertyApi } from './apis/dashboard-item';
-import { debounce } from 'throttle-debounce';
 
 const AppContainer = styled.div`
   margin-top: 16px;
@@ -20,7 +16,7 @@ const LoadingIndicator = (props) => {
   return <Spinner {...props} />;
 };
 
-async function searchForDashboards(searchQuery) {
+async function searchForDashboards (searchQuery) {
   const dashboardSearchResponse = await requestJira(`/rest/api/3/dashboard/search?dashboardName=${encodeURIComponent(searchQuery)}`);
   if (!dashboardSearchResponse.ok) {
     throw new Error('Did not perform operation successfully');
@@ -29,7 +25,7 @@ async function searchForDashboards(searchQuery) {
   return response.values;
 }
 
-async function getDashboardItems(dashboardId) {
+async function getDashboardItems (dashboardId) {
   const dashboardItemsResponse = await requestJira(`/rest/api/3/dashboard/${dashboardId}/gadget`);
   if (!dashboardItemsResponse.ok) {
     throw new Error('Did not perform operation successfully');
@@ -39,9 +35,9 @@ async function getDashboardItems(dashboardId) {
 }
 
 // TODO
-function toLabel(dashboard) {
+function toLabel (dashboard) {
   const description = (dashboard.description || '').length > 0 ? ` - ${dashboard.description}` : '';
-  return `${dashboard.name} (${dashboard.id})${description}`
+  return `${dashboard.name} (${dashboard.id})${description}`;
 }
 
 /**
@@ -56,12 +52,10 @@ function toLabel(dashboard) {
  * We should also provide a "selector" experience to find other users and
  * attempt to view their properties.
  */
-export function DashboardSelector() {
-  const [initialState, setInitialState] = useState(undefined);
+export function DashboardSelector () {
   const [selected, setSelected] = useState(undefined);
-  const context = useViewContext();
 
-  async function getDashboardOptions(inputValue) {
+  async function getDashboardOptions (inputValue) {
     const dashboards = await searchForDashboards(inputValue);
 
     return dashboards.map(dashboard => ({
@@ -70,7 +64,7 @@ export function DashboardSelector() {
     }));
   }
 
-  async function getDashboardItemOptions(dashboardId) {
+  async function getDashboardItemOptions (dashboardId) {
     const dashboardItems = await getDashboardItems(dashboardId);
 
     return dashboardItems.map(dashboardItem => ({
@@ -79,7 +73,7 @@ export function DashboardSelector() {
     }));
   }
 
-  function onDashboardSelectChange(selectedOption) {
+  function onDashboardSelectChange (selectedOption) {
     getDashboardItemOptions(selectedOption.value).then(dashboardItemOptions => {
       setSelected({
         dashboard: selectedOption,
@@ -93,9 +87,9 @@ export function DashboardSelector() {
   return (
     <>
       <p>Dashboard Items (Gadgets) can have entity properties. Use this screen to modify them.</p>
-      <Label htmlFor="dashboard-select">Which dashboard?</Label>
+      <Label htmlFor='dashboard-select'>Which dashboard?</Label>
       <AsyncSelect
-        inputId="dashboard-select"
+        inputId='dashboard-select'
         cacheOptions
         loadOptions={e => getDashboardOptions(e)}
         components={{ LoadingIndicator }}
@@ -103,9 +97,9 @@ export function DashboardSelector() {
       />
       {isPresent(selected) && isPresent(selected.dashboard) && (
         <>
-          <Label htmlFor="item-select">Which Dashboard Item?</Label>
+          <Label htmlFor='item-select'>Which Dashboard Item?</Label>
           <Select
-            inputId="item-select"
+            inputId='item-select'
             defaultValue={selected.dashboardItemOptions[0]}
             options={selected.dashboardItemOptions}
             onChange={(selectedOption) => {

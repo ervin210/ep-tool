@@ -1,7 +1,7 @@
 import React from 'react';
 import Button, { ButtonGroup, LoadingButton } from '@atlaskit/button';
 import { view } from '@forge/bridge';
-import AceEditor from "react-ace";
+import AceEditor from 'react-ace';
 import TextField from '@atlaskit/textfield';
 
 import Form, {
@@ -12,12 +12,10 @@ import Form, {
   FormSection,
   HelperMessage,
   RequiredAsterisk,
-  ValidMessage,
+  ValidMessage
 } from '@atlaskit/form';
 
-
 import styled from 'styled-components';
-import { useEffectAsync } from './useEffectAsync';
 import { useViewContext } from './ViewContext';
 
 const Container = styled.div`
@@ -38,7 +36,7 @@ export const AddPropertyModal = (props) => {
   const context = useViewContext();
   const useText = !!context?.extension?.modal?.useText;
 
-  function closeModal() {
+  function closeModal () {
     view.close({
       type: TYPE_CLOSE
     });
@@ -57,18 +55,18 @@ export const AddPropertyModal = (props) => {
         >
           {({ formProps, submitting }) => (
             <form {...formProps}>
-              <FormHeader title="Add property">
-                <p aria-hidden="true">
+              <FormHeader title='Add property'>
+                <p aria-hidden='true'>
                   Required fields are marked with an asterisk <RequiredAsterisk />
                 </p>
               </FormHeader>
               <FormSection>
                 <Field
-                  aria-required={true}
-                  name="propertyKey"
-                  label="Property Key"
+                  aria-required
+                  name='propertyKey'
+                  label='Property Key'
                   isRequired
-                  defaultValue=""
+                  defaultValue=''
                   validate={(value) => {
                     if (value.length > 255) return 'TOO_LONG';
                     if (value.length < 1) return 'TOO_SHORT';
@@ -77,7 +75,7 @@ export const AddPropertyModal = (props) => {
                 >
                   {({ fieldProps, error }) => (
                     <>
-                      <TextField autoComplete="off" {...fieldProps} />
+                      <TextField autoComplete='off' {...fieldProps} />
                       {!error && (
                         <HelperMessage>
                           Write a property key less than 255 characters long.
@@ -97,13 +95,13 @@ export const AddPropertyModal = (props) => {
                   )}
                 </Field>
                 <Field
-                  aria-required={true}
-                  name="propertyValue"
-                  label="Property value"
-                  defaultValue=""
+                  aria-required
+                  name='propertyValue'
+                  label='Property value'
+                  defaultValue=''
                   isRequired
                   validate={(value) => {
-                    if (!!useText) {
+                    if (useText) {
                       // TODO probably some more validation, like no quote characters
                       return undefined;
                     } else {
@@ -122,12 +120,12 @@ export const AddPropertyModal = (props) => {
                         <AceEditor
                           width='100%'
                           height='200px'
-                          mode={!!useText ? 'text' : 'json'}
-                          theme="monokai"
+                          mode={useText ? 'text' : 'json'}
+                          theme='monokai'
                           name={fieldProps.name}
                           isRequired={fieldProps.isRequired}
                           editorProps={{ $blockScrolling: true }}
-                          onChange={(e) => { fieldProps.onChange(e) }}
+                          onChange={(e) => { fieldProps.onChange(e); }}
                         />
                         {error && !valid && (
                           <HelperMessage>
@@ -139,9 +137,11 @@ export const AddPropertyModal = (props) => {
                             Please write valid JSON in the above.
                           </ErrorMessage>
                         )}
-                        {valid && meta.dirty ? (
-                          <ValidMessage>JSON valid!</ValidMessage>
-                        ) : null}
+                        {valid && meta.dirty
+                          ? (
+                            <ValidMessage>JSON valid!</ValidMessage>
+                            )
+                          : null}
                       </>
                     );
                   }}
@@ -150,10 +150,10 @@ export const AddPropertyModal = (props) => {
 
               <FormFooter>
                 <ButtonGroup>
-                  <Button appearance="subtle" onClick={() => closeModal()}>Cancel</Button>
+                  <Button appearance='subtle' onClick={() => closeModal()}>Cancel</Button>
                   <LoadingButton
-                    type="submit"
-                    appearance="primary"
+                    type='submit'
+                    appearance='primary'
                     isLoading={submitting}
                   >
                     Create

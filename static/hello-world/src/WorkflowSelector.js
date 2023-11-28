@@ -6,7 +6,6 @@ import { Label } from '@atlaskit/form';
 import { isPresent } from 'ts-is-present';
 import App from './App';
 import styled from 'styled-components';
-import { useViewContext } from './ViewContext';
 import { getWorkflowTransitionPropertyApi } from './apis/workflow-transition';
 
 const AppContainer = styled.div`
@@ -17,7 +16,7 @@ const LoadingIndicator = (props) => {
   return <Spinner {...props} />;
 };
 
-async function searchForWorkflows(searchQuery) {
+async function searchForWorkflows (searchQuery) {
   const workflowSearchResponse = await requestJira(`/rest/api/3/workflow/search?expand=transitions,operations&queryString=${encodeURIComponent(searchQuery)}`);
   if (!workflowSearchResponse.ok) {
     throw new Error('Did not perform operation successfully');
@@ -27,9 +26,9 @@ async function searchForWorkflows(searchQuery) {
 }
 
 // TODO
-function toLabel(workflow) {
+function toLabel (workflow) {
   const description = (workflow.description || '').length > 0 ? ` - ${workflow.description}` : '';
-  return `${workflow.id.name} (${workflow.id.entityId})${description}`
+  return `${workflow.id.name} (${workflow.id.entityId})${description}`;
 }
 
 /**
@@ -44,10 +43,10 @@ function toLabel(workflow) {
  * We should also provide a "selector" experience to find other users and
  * attempt to view their properties.
  */
-export function WorkflowSelector() {
+export function WorkflowSelector () {
   const [selected, setSelected] = useState(undefined);
 
-  async function getWorkflowOptions(inputValue) {
+  async function getWorkflowOptions (inputValue) {
     const workflows = await searchForWorkflows(inputValue);
 
     return workflows.map(workflow => ({
@@ -59,7 +58,7 @@ export function WorkflowSelector() {
     }));
   }
 
-  function getTransitionOptions(workflowOption) {
+  function getTransitionOptions (workflowOption) {
     return workflowOption.transitions.map(transition => ({
       label: `${transition.name} (${transition.id})`,
       value: transition.id
@@ -70,9 +69,9 @@ export function WorkflowSelector() {
   return (
     <>
       <p>Workflow transitions can have entity properties. Use this screen to modify them.</p>
-      <Label htmlFor="workflow-select">Which workflow?</Label>
+      <Label htmlFor='workflow-select'>Which workflow?</Label>
       <AsyncSelect
-        inputId="workflow-select"
+        inputId='workflow-select'
         cacheOptions
         loadOptions={e => getWorkflowOptions(e)}
         components={{ LoadingIndicator }}
@@ -86,9 +85,9 @@ export function WorkflowSelector() {
       />
       {isPresent(selected) && isPresent(selected.workflow) && (
         <>
-          <Label htmlFor="transition-select">Which Workflow transition?</Label>
+          <Label htmlFor='transition-select'>Which Workflow transition?</Label>
           <Select
-            inputId="transition-select"
+            inputId='transition-select'
             defaultValue={selected.workflow.transitionOptions[0]}
             options={selected.workflow.transitionOptions}
             onChange={(selectedOption) => {
@@ -102,7 +101,7 @@ export function WorkflowSelector() {
       )}
       {isPresent(selected) && isPresent(selected.workflowTransition) && (
         <AppContainer>
-          <App useText={true} propertyApi={getWorkflowTransitionPropertyApi(selected.workflow.workflowName, selected.workflowTransition.value)} />
+          <App useText propertyApi={getWorkflowTransitionPropertyApi(selected.workflow.workflowName, selected.workflowTransition.value)} />
         </AppContainer>
       )}
     </>

@@ -1,5 +1,5 @@
 import { requestJira } from '@forge/bridge';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Select from '@atlaskit/select';
 import { useEffectAsync } from './useEffectAsync';
 import { Label } from '@atlaskit/form';
@@ -12,22 +12,22 @@ const AppContainer = styled.div`
   margin-top: 16px;
 `;
 
-async function getIssueTypes() {
-  const allIssueTypesResponse = await requestJira(`/rest/api/3/issuetype`);
+async function getIssueTypes () {
+  const allIssueTypesResponse = await requestJira('/rest/api/3/issuetype');
   if (!allIssueTypesResponse.ok) {
     throw new Error('Did not perform operation successfully');
   }
   return await allIssueTypesResponse.json();
 }
 
-function toIssueTypeOptions(issueTypes) {
+function toIssueTypeOptions (issueTypes) {
   return issueTypes.map(issueType => ({
     label: `${issueType.name} (${issueType.id})`,
     value: issueType.id
   }));
 }
 
-export function IssueTypeSelector() {
+export function IssueTypeSelector () {
   const [issueTypes, setIssueTypes] = useState(undefined);
   const [currentState, setCurrentState] = useState(undefined);
 
@@ -43,13 +43,13 @@ export function IssueTypeSelector() {
 
   return (
     <>
-      <Label htmlFor="indicators-loading">Which Issue Types entity properties do you wish to edit?</Label>
+      <Label htmlFor='indicators-loading'>Which Issue Types entity properties do you wish to edit?</Label>
       {!isPresent(issueTypes) && (
         <p>Loading...</p>
       )}
       {isPresent(issueTypes) && (
         <Select
-          inputId="indicators-loading"
+          inputId='indicators-loading'
           defaultValue={defaultOptions[0]}
           options={defaultOptions}
           onChange={(selectedOption) => {

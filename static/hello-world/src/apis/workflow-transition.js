@@ -1,6 +1,6 @@
 import { requestJira } from '@forge/bridge';
 
-export function getWorkflowTransitionPropertyApi(workflowName, transitionId) {
+export function getWorkflowTransitionPropertyApi (workflowName, transitionId) {
   return {
     extractEntityId: () => {
       return transitionId;
@@ -28,7 +28,7 @@ export function getWorkflowTransitionPropertyApi(workflowName, transitionId) {
           value: data
         }),
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
@@ -39,12 +39,12 @@ export function getWorkflowTransitionPropertyApi(workflowName, transitionId) {
       const propertiesResponse = await requestJira(`/rest/api/3/workflow/transitions/${entityId}/properties?workflowName=${workflowName}&key=${encodeURIComponent(propertyKey)}`, {
         method: 'DELETE',
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
     }
-  }
+  };
 }

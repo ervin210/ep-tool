@@ -15,11 +15,11 @@ export const IssuePropertyApi = {
   getProperty: async (issueId, propertyKey) => {
     const propertiesResponse = await requestJira(`/rest/api/3/issue/${issueId}/properties/${encodeURIComponent(propertyKey)}`, {
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     });
     if (!propertiesResponse.ok) {
-      throw new Error(`Did not perform operation successfully`);
+      throw new Error('Did not perform operation successfully');
     }
     return await propertiesResponse.json();
   },
@@ -28,8 +28,8 @@ export const IssuePropertyApi = {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
-        'Content-type': "application/json",
-        'Accept': 'application/json'
+        'Content-type': 'application/json',
+        Accept: 'application/json'
       }
     });
     if (!propertiesResponse.ok) {
@@ -40,11 +40,11 @@ export const IssuePropertyApi = {
     const propertiesResponse = await requestJira(`/rest/api/3/issue/${issueId}/properties/${encodeURIComponent(propertyKey)}`, {
       method: 'DELETE',
       headers: {
-        'Content-type': "application/json"
+        'Content-type': 'application/json'
       }
     });
     if (!propertiesResponse.ok) {
       throw new Error('Did not perform operation successfully');
     }
   }
-}
+};

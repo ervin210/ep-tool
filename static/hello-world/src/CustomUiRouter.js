@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useEffectAsync } from './useEffectAsync';
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from 'react-router-dom/server';
 import { isPresent } from 'ts-is-present';
 import { view } from '@forge/bridge';
 
-function convertContextToRoute(context) {
+function convertContextToRoute (context) {
   let url = `/module/${context.moduleKey}`;
 
   if (isPresent(context?.extension?.modal?.type)) {
@@ -30,5 +30,5 @@ export const CustomUiRouter = (props) => {
     <StaticRouter location={convertContextToRoute(context)}>
       {props.children}
     </StaticRouter>
-  )
-}
+  );
+};

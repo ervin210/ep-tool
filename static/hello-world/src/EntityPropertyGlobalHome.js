@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function EntityPropertyGlobalHome() {
+export function EntityPropertyGlobalHome () {
   return (
     <>
       <p>Welcome to the Entity Property Tool. A tool meant for App Developers to play with Entity Properties on their development sites.</p>

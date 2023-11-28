@@ -1,6 +1,6 @@
 import { requestJira } from '@forge/bridge';
 
-export function getUserPropertyApi(accountId) {
+export function getUserPropertyApi (accountId) {
   return {
     extractEntityId: () => {
       return accountId;
@@ -25,7 +25,7 @@ export function getUserPropertyApi(accountId) {
         method: 'PUT',
         body: JSON.stringify(data),
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
@@ -36,12 +36,12 @@ export function getUserPropertyApi(accountId) {
       const propertiesResponse = await requestJira(`/rest/api/3/user/properties/${encodeURIComponent(propertyKey)}?accountId=${accountId}`, {
         method: 'DELETE',
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
     }
-  }
+  };
 }

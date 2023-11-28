@@ -1,6 +1,6 @@
 import { requestJira } from '@forge/bridge';
 
-export function getIssueTypeApi(issueTypeId) {
+export function getIssueTypeApi (issueTypeId) {
   return {
     extractEntityId: () => {
       return issueTypeId;
@@ -25,7 +25,7 @@ export function getIssueTypeApi(issueTypeId) {
         method: 'PUT',
         body: JSON.stringify(data),
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
@@ -36,12 +36,12 @@ export function getIssueTypeApi(issueTypeId) {
       const propertiesResponse = await requestJira(`/rest/api/3/issuetype/${entityId}/properties/${encodeURIComponent(propertyKey)}`, {
         method: 'DELETE',
         headers: {
-          'Content-type': "application/json"
+          'Content-type': 'application/json'
         }
       });
       if (!propertiesResponse.ok) {
         throw new Error('Did not perform operation successfully');
       }
     }
-  }
+  };
 }

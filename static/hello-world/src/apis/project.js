@@ -24,7 +24,7 @@ export const ProjectPropertyApi = {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
-        'Content-type': "application/json"
+        'Content-type': 'application/json'
       }
     });
     if (!propertiesResponse.ok) {
@@ -35,11 +35,11 @@ export const ProjectPropertyApi = {
     const propertiesResponse = await requestJira(`/rest/api/3/project/${projectId}/properties/${encodeURIComponent(propertyKey)}`, {
       method: 'DELETE',
       headers: {
-        'Content-type': "application/json"
+        'Content-type': 'application/json'
       }
     });
     if (!propertiesResponse.ok) {
       throw new Error('Did not perform operation successfully');
     }
   }
-}
+};

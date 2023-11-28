@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { view, Modal } from '@forge/bridge';
+import { Modal } from '@forge/bridge';
 import { useEffectAsync } from './useEffectAsync';
 import { isPresent } from 'ts-is-present';
 import { Property } from './Property';
@@ -9,12 +8,12 @@ import Button from '@atlaskit/button';
 import { TYPE_CREATE } from './AddPropertyModal';
 import { useViewContext } from './ViewContext';
 
-function App(props) {
+function App (props) {
   const { propertyApi } = props;
   const [entityPropertyState, setEntityPropertyState] = useState(undefined);
   const context = useViewContext();
 
-  async function loadEntityPropertyState() {
+  async function loadEntityPropertyState () {
     const entityId = propertyApi.extractEntityId(context);
     return {
       entityId,
@@ -30,7 +29,7 @@ function App(props) {
     setEntityPropertyState(await loadEntityPropertyState());
   }, entityPropertyState);
 
-  async function onDelete(propertyKey) {
+  async function onDelete (propertyKey) {
     await propertyApi.deleteProperty(entityPropertyState.entityId, propertyKey);
     setEntityPropertyState(await loadEntityPropertyState());
   }
@@ -40,7 +39,7 @@ function App(props) {
       const { propertyKey, propertyValue } = payload.data;
 
       // TODO what if this fails?
-      const parsedValue = !!props.useText ? propertyValue : JSON.parse(propertyValue);
+      const parsedValue = props.useText ? propertyValue : JSON.parse(propertyValue);
       await propertyApi.setProperty(entityPropertyState.entityId, propertyKey, parsedValue);
 
       setEntityPropertyState(await loadEntityPropertyState());
@@ -58,7 +57,7 @@ function App(props) {
 
   return (
     <div>
-      <p>These are the properties against this entity, the values are {!!props.useText ? 'plain text' : 'JSON objects'}.</p>
+      <p>These are the properties against this entity, the values are {props.useText ? 'plain text' : 'JSON objects'}.</p>
       {!isPresent(entityPropertyState) && (
         <div>Loading the properties for this project...</div>
       )}
