@@ -40,7 +40,8 @@ function App(props) {
       const { propertyKey, propertyValue } = payload.data;
 
       // TODO what if this fails?
-      await propertyApi.setProperty(entityPropertyState.entityId, propertyKey, JSON.parse(propertyValue));
+      const parsedValue = !!props.useText ? propertyValue : JSON.parse(propertyValue);
+      await propertyApi.setProperty(entityPropertyState.entityId, propertyKey, parsedValue);
 
       setEntityPropertyState(await loadEntityPropertyState());
     }
@@ -50,13 +51,14 @@ function App(props) {
     onClose: (payload) => addPropertyClosed(payload),
     size: 'medium',
     context: {
-      type: 'add-property'
+      type: 'add-property',
+      useText: !!props.useText
     }
   });
 
   return (
     <div>
-      <p>These are the properties against this entity, the values are JSON objects.</p>
+      <p>These are the properties against this entity, the values are {!!props.useText ? 'plain text' : 'JSON objects'}.</p>
       {!isPresent(entityPropertyState) && (
         <div>Loading the properties for this project...</div>
       )}
@@ -70,6 +72,7 @@ function App(props) {
               propertyKey={key}
               propertyApi={propertyApi}
               onDelete={() => onDelete(key)}
+              useText={!!props.useText}
             />
           ))}
         </>

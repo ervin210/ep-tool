@@ -17,6 +17,7 @@ import { SpaRouter } from './SpaRouter';
 import { ContextRoute } from './ContextRouter';
 import { ViewContext } from './ViewContext';
 import { DashboardSelector } from './DashboardSelector';
+import { WorkflowSelector } from './WorkflowSelector';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -46,7 +47,7 @@ ReactDOM.render(
                 <Route exact path='/user' element={<UserSelector />} />
                 <Route exact path='/issue-type' element={<IssueTypeSelector />} />
                 <Route exact path='/dashboard-items' element={<DashboardSelector />} />
-                <Route exact path='/workflow-transitions' element={<p>TODO</p>} />
+                <Route exact path='/workflow-transitions' element={<WorkflowSelector />} />
                 {/* TODO how do I setup the add-property modal? */}
               </Routes>
           </SpaRouter>

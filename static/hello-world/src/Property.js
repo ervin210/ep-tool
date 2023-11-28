@@ -154,7 +154,8 @@ export const Property = (props) => {
           <Button iconBefore={<EditorRemoveIcon />} onClick={() => props.onDelete(propertyKey)}>Delete</Button>
         </PropertyHeaderActions>
       </PropertyHeaderContainer>
-      <AceEditor
+      {!props.useText && (
+        <AceEditor
         width='100%'
         height='200px'
         mode="json"
@@ -164,6 +165,19 @@ export const Property = (props) => {
         defaultValue={JSON.stringify(property.value, null, 2)}
         onChange={(e) => onChangeDebounced(e)}
       />
+      )}
+      {!!props.useText && (
+        <AceEditor
+          width='100%'
+          height='200px'
+          mode="text"
+          theme="monokai"
+          name={`property-${propertyKey}`}
+          editorProps={{ $blockScrolling: true }}
+          defaultValue={property.value}
+          onChange={(e) => onChangeDebounced(e)}
+        />
+      )}
     </div>
   );
 }

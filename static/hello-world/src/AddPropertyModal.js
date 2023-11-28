@@ -17,6 +17,8 @@ import Form, {
 
 
 import styled from 'styled-components';
+import { useEffectAsync } from './useEffectAsync';
+import { useViewContext } from './ViewContext';
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +35,9 @@ export const TYPE_CREATE = 'add-property-create';
 export const TYPE_CLOSE = 'add-property-close';
 
 export const AddPropertyModal = (props) => {
+  const context = useViewContext();
+  const useText = !!context?.extension?.modal?.useText;
+
   function closeModal() {
     view.close({
       type: TYPE_CLOSE
@@ -98,11 +103,16 @@ export const AddPropertyModal = (props) => {
                   defaultValue=""
                   isRequired
                   validate={(value) => {
-                    try {
-                      JSON.parse(value);
+                    if (!!useText) {
+                      // TODO probably some more validation, like no quote characters
                       return undefined;
-                    } catch (e) {
-                      return 'INVALID_JSON';
+                    } else {
+                      try {
+                        JSON.parse(value);
+                        return undefined;
+                      } catch (e) {
+                        return 'INVALID_JSON';
+                      }
                     }
                   }}
                 >
@@ -112,7 +122,7 @@ export const AddPropertyModal = (props) => {
                         <AceEditor
                           width='100%'
                           height='200px'
-                          mode="json"
+                          mode={!!useText ? 'text' : 'json'}
                           theme="monokai"
                           name={fieldProps.name}
                           isRequired={fieldProps.isRequired}
