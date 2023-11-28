@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { view, requestJira } from '@forge/bridge';
+import { requestJira } from '@forge/bridge';
 import { useEffectAsync } from './useEffectAsync';
 import { AsyncSelect } from '@atlaskit/select';
 import Spinner from '@atlaskit/spinner';

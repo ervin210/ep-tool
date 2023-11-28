@@ -16,24 +16,23 @@ import { IssueTypeSelector } from './IssueTypeSelector';
 import { SpaRouter } from './SpaRouter';
 import { ContextRoute } from './ContextRouter';
 import { ViewContext } from './ViewContext';
+import { DashboardSelector } from './DashboardSelector';
 
 ReactDOM.render(
   <React.StrictMode>
     <ViewContext>
       <ContextRoute moduleKey="project-entity-properties">
-        <App propertyApi={ProjectPropertyApi} />
-        <ContextRoute modalType="add-property">
-          <AddPropertyModal />
+        <ContextRoute noModal>
+          <App propertyApi={ProjectPropertyApi} />
         </ContextRoute>
-      </ContextRoute>
-      <ContextRoute moduleKey="project-entity-properties">
-        <App propertyApi={ProjectPropertyApi} />
         <ContextRoute modalType="add-property">
           <AddPropertyModal />
         </ContextRoute>
       </ContextRoute>
       <ContextRoute moduleKey="issue-entity-properties">
-        <App propertyApi={IssuePropertyApi} />
+        <ContextRoute noModal>
+          <App propertyApi={IssuePropertyApi} />
+        </ContextRoute>
         <ContextRoute modalType="add-property">
           <AddPropertyModal />
         </ContextRoute>
@@ -46,7 +45,7 @@ ReactDOM.render(
                 <Route exact path='/' element={<p>TODO</p>} />
                 <Route exact path='/user' element={<UserSelector />} />
                 <Route exact path='/issue-type' element={<IssueTypeSelector />} />
-                <Route exact path='/dashboard-items' element={<p>TODO</p>} />
+                <Route exact path='/dashboard-items' element={<DashboardSelector />} />
                 <Route exact path='/workflow-transitions' element={<p>TODO</p>} />
                 {/* TODO how do I setup the add-property modal? */}
               </Routes>

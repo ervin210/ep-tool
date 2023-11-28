@@ -56,7 +56,7 @@ function App(props) {
 
   return (
     <div>
-      <p>These are the entity properties for this project.</p>
+      <p>These are the properties against this entity, the values are JSON objects.</p>
       {!isPresent(entityPropertyState) && (
         <div>Loading the properties for this project...</div>
       )}

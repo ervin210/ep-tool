@@ -6,6 +6,11 @@ import { Label } from '@atlaskit/form';
 import { isPresent } from 'ts-is-present';
 import App from './App';
 import { getIssueTypeApi } from './apis/issue-type';
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+  margin-top: 16px;
+`;
 
 async function getIssueTypes() {
   const allIssueTypesResponse = await requestJira(`/rest/api/3/issuetype`);
@@ -56,7 +61,9 @@ export function IssueTypeSelector() {
         />
       )}
       {isPresent(currentState) && (
-        <App propertyApi={getIssueTypeApi(currentState.issueTypeId)} />
+        <AppContainer>
+          <App propertyApi={getIssueTypeApi(currentState.issueTypeId)} />
+        </AppContainer>
       )}
     </>
   );
