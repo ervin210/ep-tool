@@ -154,30 +154,19 @@ export const Property = (props) => {
           <Button iconBefore={<EditorRemoveIcon />} onClick={() => props.onDelete(propertyKey)}>Delete</Button>
         </PropertyHeaderActions>
       </PropertyHeaderContainer>
-      {!props.useText && (
-        <AceEditor
-          width='100%'
-          height='200px'
-          mode='json'
-          theme='monokai'
-          name={`property-${propertyKey}`}
-          editorProps={{ $blockScrolling: true }}
-          defaultValue={JSON.stringify(property.value, null, 2)}
-          onChange={(e) => onChangeDebounced(e)}
-        />
-      )}
-      {!!props.useText && (
-        <AceEditor
-          width='100%'
-          height='200px'
-          mode='text'
-          theme='monokai'
-          name={`property-${propertyKey}`}
-          editorProps={{ $blockScrolling: true }}
-          defaultValue={property.value}
-          onChange={(e) => onChangeDebounced(e)}
-        />
-      )}
+      <AceEditor
+        width='100%'
+        height='200px'
+        mode={!props.useText ? 'json' : 'text'}
+        theme='monokai'
+        name={`property-${propertyKey}`}
+        editorProps={{ $blockScrolling: true }}
+        defaultValue={!props.useText ? JSON.stringify(property.value, null, 2) : property.value}
+        onChange={(e) => onChangeDebounced(e)}
+        style={{
+          zIndex: -10
+        }}
+      />
     </div>
   );
 };

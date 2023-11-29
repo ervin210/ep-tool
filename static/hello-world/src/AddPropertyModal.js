@@ -126,6 +126,9 @@ export const AddPropertyModal = (props) => {
                           isRequired={fieldProps.isRequired}
                           editorProps={{ $blockScrolling: true }}
                           onChange={(e) => { fieldProps.onChange(e); }}
+                          style={{
+                            zIndex: -10
+                          }}
                         />
                         {error && !valid && (
                           <HelperMessage>
