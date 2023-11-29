@@ -6,7 +6,10 @@
   "scripts": {
     "prepare": "husky install",
     "build-static": "cd static/hello-world && npm run build",
-    "deploy-dev": "forge deploy",
+    "forge-deploy:dev": "forge deploy",
+    "forge-deploy:stg": "forge deploy",
+    "forge-deploy:prod": "forge deploy",
+    "gen-manifest:dev": "dhall-to-yaml-ng --file manifest.dev.dhall --output manifest.yml",
     "deploy": "run-s build-static deploy-dev"
   },
   "keywords": [
