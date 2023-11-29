@@ -56,20 +56,7 @@ ReactDOM.render(
           <AddPropertyModal />
         </ContextRoute>
       </ContextRoute>
-
     </ViewContext>
-    {/* <CustomUiRouter>
-      <Routes>
-        <Route exact path='/module/project-entity-properties' element={<App propertyApi={ProjectPropertyApi} />} />
-        <Route exact path='/module/issue-entity-properties' element={<App propertyApi={IssuePropertyApi} />} />
-        <Route exact path='/module/user-entity-properties' element={<UserSelector />} />
-        <Route exact path='/module/issue-type-entity-properties' element={<IssueTypeSelector />} />
-        <Route exact path='/module/project-entity-properties/modal/add-property' element={<AddPropertyModal />} />
-        <Route exact path='/module/issue-entity-properties/modal/add-property' element={<AddPropertyModal />} />
-        <Route exact path='/module/user-entity-properties/modal/add-property' element={<AddPropertyModal />} />
-        <Route exact path='/module/issue-type-entity-properties/modal/add-property' element={<AddPropertyModal />} />
-      </Routes>
-    </CustomUiRouter> */}
   </React.StrictMode>,
   document.getElementById('root')
 );

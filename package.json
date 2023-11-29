@@ -6,11 +6,16 @@
   "scripts": {
     "prepare": "husky install",
     "build-static": "cd static/hello-world && npm run build",
-    "forge-deploy:dev": "forge deploy",
-    "forge-deploy:stg": "forge deploy",
-    "forge-deploy:prod": "forge deploy",
+    "forge-deploy:dev": "forge deploy -e development",
+    "forge-deploy:stg": "forge deploy -e staging",
+    "forge-deploy:prod": "forge deploy -e production",
     "gen-manifest:dev": "dhall-to-yaml-ng --file manifest.dev.dhall --output manifest.yml",
-    "deploy": "run-s build-static deploy-dev"
+    "gen-manifest:stg": "dhall-to-yaml-ng --file manifest.stg.dhall --output manifest.yml",
+    "gen-manifest:prod": "dhall-to-yaml-ng --file manifest.prod.dhall --output manifest.yml",
+    "clean:manifest": "rm manifest.yml",
+    "deploy:dev": "run-s gen-manifest:dev build-static forge-deploy:dev",
+    "deploy:stg": "run-s gen-manifest:stg build-static forge-deploy:stg",
+    "deploy:prod": "run-s gen-manifest:prod build-static forge-deploy:prod"
   },
   "keywords": [
     "atlassian",
