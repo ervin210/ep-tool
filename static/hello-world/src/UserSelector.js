@@ -9,6 +9,7 @@ import { getUserPropertyApi } from './apis/user';
 import App from './App';
 import styled from 'styled-components';
 import { useViewContext } from './ViewContext';
+import { SelectZIndexFix } from './SelectZIndexFix';
 
 const AppContainer = styled.div`
   margin-top: 16px;
@@ -96,10 +97,11 @@ export function UserSelector () {
   const defaultOptions = defaultOption();
 
   return (
-    <>
+    <SelectZIndexFix>
       <Label htmlFor='indicators-loading'>Which users entity properties do you wish to edit?</Label>
       <AsyncSelect
         inputId='indicators-loading'
+        className='select-component'
         cacheOptions
         defaultOptions
         defaultValue={defaultOptions[0]}
@@ -118,6 +120,6 @@ export function UserSelector () {
           <App propertyApi={currentAaid.propertyApi} />
         </AppContainer>
       )}
-    </>
+    </SelectZIndexFix>
   );
 }

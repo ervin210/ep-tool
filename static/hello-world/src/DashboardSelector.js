@@ -7,6 +7,7 @@ import { isPresent } from 'ts-is-present';
 import App from './App';
 import styled from 'styled-components';
 import { getDashboardItemPropertyApi } from './apis/dashboard-item';
+import { SelectZIndexFix } from './SelectZIndexFix';
 
 const AppContainer = styled.div`
   margin-top: 16px;
@@ -85,14 +86,16 @@ export function DashboardSelector () {
 
   // TODO Find a way to debounce getDashboardOptions
   return (
-    <>
+    <SelectZIndexFix>
       <p>Dashboard Items (Gadgets) can have entity properties. Use this screen to modify them.</p>
-      <Label htmlFor='dashboard-select'>Which dashboard?</Label>
+      <Label htmlFor='dashboard-select'>Which dashboard? (Start searching for the name of your dashboard)</Label>
       <AsyncSelect
         inputId='dashboard-select'
+        className='select-component'
         cacheOptions
         loadOptions={e => getDashboardOptions(e)}
         components={{ LoadingIndicator }}
+        noOptionsMessage={() => 'Modify your search to find a Dashboard to select.'}
         onChange={onDashboardSelectChange}
       />
       {isPresent(selected) && isPresent(selected.dashboard) && (
@@ -100,6 +103,7 @@ export function DashboardSelector () {
           <Label htmlFor='item-select'>Which Dashboard Item?</Label>
           <Select
             inputId='item-select'
+            className='sub-select-component'
             defaultValue={selected.dashboardItemOptions[0]}
             options={selected.dashboardItemOptions}
             onChange={(selectedOption) => {
@@ -116,6 +120,6 @@ export function DashboardSelector () {
           <App propertyApi={getDashboardItemPropertyApi(selected.dashboard.value, selected.dashboardItem.value)} />
         </AppContainer>
       )}
-    </>
+    </SelectZIndexFix>
   );
 }

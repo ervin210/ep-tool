@@ -7,6 +7,7 @@ import { isPresent } from 'ts-is-present';
 import App from './App';
 import styled from 'styled-components';
 import { getWorkflowTransitionPropertyApi } from './apis/workflow-transition';
+import { SelectZIndexFix } from './SelectZIndexFix';
 
 const AppContainer = styled.div`
   margin-top: 16px;
@@ -67,14 +68,16 @@ export function WorkflowSelector () {
 
   // TODO Find a way to debounce getDashboardOptions
   return (
-    <>
+    <SelectZIndexFix>
       <p>Workflow transitions can have entity properties. Use this screen to modify them.</p>
-      <Label htmlFor='workflow-select'>Which workflow?</Label>
+      <Label htmlFor='workflow-select'>Which workflow? (Start searching for the name of your workflow)</Label>
       <AsyncSelect
         inputId='workflow-select'
+        className='select-component'
         cacheOptions
         loadOptions={e => getWorkflowOptions(e)}
         components={{ LoadingIndicator }}
+        noOptionsMessage={() => 'Modify your search to find a Workflow to select.'}
         onChange={(selectedValue) => {
           console.log('selected workflow', selectedValue);
           setSelected({
@@ -88,6 +91,7 @@ export function WorkflowSelector () {
           <Label htmlFor='transition-select'>Which Workflow transition?</Label>
           <Select
             inputId='transition-select'
+            className='sub-select-component'
             defaultValue={selected.workflow.transitionOptions[0]}
             options={selected.workflow.transitionOptions}
             onChange={(selectedOption) => {
@@ -104,6 +108,6 @@ export function WorkflowSelector () {
           <App useText propertyApi={getWorkflowTransitionPropertyApi(selected.workflow.workflowName, selected.workflowTransition.value)} />
         </AppContainer>
       )}
-    </>
+    </SelectZIndexFix>
   );
 }

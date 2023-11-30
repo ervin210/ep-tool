@@ -7,6 +7,7 @@ import { isPresent } from 'ts-is-present';
 import App from './App';
 import { getIssueTypeApi } from './apis/issue-type';
 import styled from 'styled-components';
+import { SelectZIndexFix } from './SelectZIndexFix';
 
 const AppContainer = styled.div`
   margin-top: 16px;
@@ -42,7 +43,7 @@ export function IssueTypeSelector () {
   const defaultOptions = isPresent(issueTypes) ? toIssueTypeOptions(issueTypes) : [];
 
   return (
-    <>
+    <SelectZIndexFix>
       <Label htmlFor='indicators-loading'>Which Issue Types entity properties do you wish to edit?</Label>
       {!isPresent(issueTypes) && (
         <p>Loading...</p>
@@ -50,6 +51,7 @@ export function IssueTypeSelector () {
       {isPresent(issueTypes) && (
         <Select
           inputId='indicators-loading'
+          className='select-component'
           defaultValue={defaultOptions[0]}
           options={defaultOptions}
           onChange={(selectedOption) => {
@@ -65,6 +67,6 @@ export function IssueTypeSelector () {
           <App propertyApi={getIssueTypeApi(currentState.issueTypeId)} />
         </AppContainer>
       )}
-    </>
+    </SelectZIndexFix>
   );
 }

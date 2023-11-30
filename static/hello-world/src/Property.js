@@ -163,9 +163,6 @@ export const Property = (props) => {
         editorProps={{ $blockScrolling: true }}
         defaultValue={!props.useText ? JSON.stringify(property.value, null, 2) : property.value}
         onChange={(e) => onChangeDebounced(e)}
-        style={{
-          zIndex: -10
-        }}
       />
     </div>
   );
