@@ -15,9 +15,11 @@ function App (props) {
 
   async function loadEntityPropertyState () {
     const entityId = propertyApi.extractEntityId(context);
+    const propertyKeys = await propertyApi.getPropertyKeys(entityId);
+    const keys = propertyKeys.sort((a, b) => a.localeCompare(b));
     return {
       entityId,
-      keys: await propertyApi.getPropertyKeys(entityId)
+      keys
     };
   }
 
