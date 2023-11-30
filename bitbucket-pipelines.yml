@@ -11,6 +11,7 @@ options:
 
 deploymentScript: &deploymentScript
   script:
+    - cd remotes/connect
     # Download and extract Atlas CLI
     - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
     # Install the Micros plugin
@@ -20,13 +21,26 @@ deploymentScript: &deploymentScript
 
 pipelines:
   default:
-    - step:
-        caches:
-          - node
-        script: # Modify the commands below to build your repository.
-          - npm install
-          - npm run test
-          - npm run build
+    - parallel:
+      steps:
+        - step:
+          name: Remote Build & Test
+          caches:
+            - node
+          script: # Modify the commands below to build your repository.
+            - cd remotes/connect
+            - npm install
+            - npm run test
+            - npm run build
+        - step:
+            name: Custom UI Frontend Build & Test
+            caches:
+              - node
+            script:
+              - cd static/hello-world
+              - yarn
+              - yarn lint
+              - yarn build
   branches:
     master:
       - step:
@@ -41,6 +55,7 @@ pipelines:
             - export DOCKER_URL="docker-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
             # build base image (node@alpine + python dependencies + hugo)
+            - cd remotes/connect
             - docker build --tag="${DOCKER_URL}/sox/atlassian/ep-tool:${BITBUCKET_BUILD_NUMBER}" .
             - docker push "${DOCKER_URL}/sox/atlassian/ep-tool:${BITBUCKET_BUILD_NUMBER}"
           services:
@@ -56,6 +71,7 @@ pipelines:
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
+            - cd remotes/connect
             # Download and extract Atlas CLI
             - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
             # Install the Micros plugin
@@ -81,6 +97,7 @@ pipelines:
             - export MICROS_TOKEN="$MICROS_TOKEN:$PIPELINES_JWT_TOKEN"
             - export MICROS_URL="wss://micros-proxy.services.atlassian.com"
             - echo $PIPELINES_JWT_TOKEN | docker login -u=sox --password-stdin docker-proxy.services.atlassian.com
+            - cd remotes/connect
             # Download and extract Atlas CLI
             - curl -fL https://statlas.prod.atl-paas.net/atlas-cli/linux/atlas-latest-linux-amd64.tar.gz | tar -xzp atlas
             # Install the Micros plugin

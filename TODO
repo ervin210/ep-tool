@@ -1,0 +1,6 @@
+Issues:
+
+ - https://community.atlassian.com/t5/Jira-Software-questions/How-to-add-user-entity-property-using-Entity-Property-Tool-for/qaq-p/1556233 
+   (Enabled for me, does not work or does not "stick")
+ - "Has Problems with user properties": https://marketplace.atlassian.com/apps/1214509/entity-property-tool-for-jira?tab=reviews&hosting=cloud
+ - This does not provide access to user entity data (as of May 2021). Also, the "Personally enabled" configuration doesn't work. It can only be "Enabled for all users" or globally disabled. If you're an admin with entity data you care about, you'll probably want to: enable this (globally), quick make your changes, then disable it and hope no one else happened to mess up any entity data. Note the "unsupported" tag for this Marketplace App, and consider just moving along.
