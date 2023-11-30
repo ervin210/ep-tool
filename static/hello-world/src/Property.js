@@ -78,7 +78,12 @@ export const Property = (props) => {
         <PropertyHeading>{propertyKey}</PropertyHeading>
         <PropertyLoadingDiv>
           <p>Error loading the property! Disabling modification of this property.</p>
-          <p>{property.error.message}</p>
+          {!propertyKey.includes('/') && (
+            <p>{property.error.message}</p>
+          )}
+          {propertyKey.includes('/') && (
+            <p>Known Issue: This issue is caused by <a href='https://ecosystem.atlassian.net/browse/ACJIRA-2708'>ACJIRA-2708</a></p>
+          )}
         </PropertyLoadingDiv>
       </div>
     );
