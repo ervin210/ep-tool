@@ -22,25 +22,25 @@ deploymentScript: &deploymentScript
 pipelines:
   default:
     - parallel:
-      steps:
-        - step:
-          name: Remote Build & Test
-          caches:
-            - node
-          script: # Modify the commands below to build your repository.
-            - cd remotes/connect
-            - npm install
-            - npm run test
-            - npm run build
-        - step:
-            name: Custom UI Frontend Build & Test
+        steps:
+          - step:
+            name: Remote Build & Test
             caches:
               - node
-            script:
-              - cd static/hello-world
-              - yarn
-              - yarn lint
-              - yarn build
+            script: # Modify the commands below to build your repository.
+              - cd remotes/connect
+              - npm install
+              - npm run test
+              - npm run build
+          - step:
+              name: Custom UI Frontend Build & Test
+              caches:
+                - node
+              script:
+                - cd static/hello-world
+                - yarn
+                - yarn lint
+                - yarn build
   branches:
     master:
       - step:
